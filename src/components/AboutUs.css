@@ -18,7 +18,7 @@ body, html {
   margin: 0 auto; /* Centers the hero section */
   width: calc(100% - 80px); /* Sets the hero width to account for 30px padding on each side */
   height: 400px; /* Adjust height as needed */
-  background: url(./images/Generate\ a\ high-definition\ photo-realistic\ image\ of\ a\ group\ of\ Necklaces\ \,earrings\,ring\ made\ of\ Gold\ and\ various\ precious\ gems\ _\ \ \ \ \ \ \ \ on\ a\ Light\ white\ colored\ Background\ with\ white\ rose\ petals\ blurred\ out\ and\ \(2\).png) no-repeat center center/cover;
+  background: url(./images/high-definition-image.png) no-repeat center center/cover;
   display: flex;
   align-items: center;
   justify-content: center;
