@@ -1,0 +1,57 @@
+.button {
+  padding: 10px 20px;
+  margin: 10px;
+  color: black;
+  background-color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  border: 2px solid #f4ab0f; /* Light brown border for selected option */
+  border-radius: 5px;
+
+}
+
+.button-hover {
+  background-color: #f0f0f0;
+  box-shadow: 5px 5px 5px lightblue;
+}
+
+.button-selected {
+  border: 2px solid #f4ab0f; /* Light brown border for selected option */
+  padding: 7px 17px; /* Adjust padding to maintain button size */
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px lightblue;
+  }
+
+.button-capture {
+  background-color: #28a745;
+  color: white; /* Ensure text is visible on green background */
+  border-color: #28a745; /* Match border color */
+}
+
+ .button-secondary {
+   background-color: #6c757d; /* Bootstrap secondary color or similar */
+   color: white;
+   border-color: #6c757d;
+ }
+
+
+.video {
+  width: 100%;
+  /* Removed max-width: 400px; */
+  background-color: black; /* Optional: can remove if video shows immediately */
+  margin-top: 10px;
+  display: block; /* Ensure the video element is a block for layout */
+}
+
+/* Style for the info text below the video */
+.locked-object-info {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Basic styles for potential error messages */
+.error-message {
+    color: red;
+    margin-top: 10px;
+}

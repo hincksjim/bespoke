@@ -1,0 +1,170 @@
+.landing-page {
+  text-align: left;
+  padding: 40px;
+  
+}
+
+.header-container {
+  position: relative;
+  width: auto;
+  height: 400px; /* Adjust height as needed */
+  background: url(./images/Generate\ a\ high-definition\ photo-realistic\ image\ of\ a\ group\ of\ Necklaces\ \,earrings\,ring\ made\ of\ Gold\ and\ various\ precious\ gems\ _\ \ \ \ \ \ \ \ on\ a\ Light\ white\ colored\ Background\ with\ white\ rose\ petals\ blurred\ out\ and\ \(2\).png) no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0); /* Adjust opacity as needed */
+  z-index: 1;
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.header-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+}
+
+.header-content p {
+  font-size: 2.5rem;
+}
+.intro h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+.intro {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.intro h2,
+.intro h3 {
+  margin-top: 20px;
+}
+
+.intro p,
+.intro ul,
+.intro ol {
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.intro ul {
+  list-style: disc inside;
+}
+
+.intro ol {
+  list-style: decimal inside;
+}
+
+.how-it-works {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.step {
+  flex: 1 1 calc(25% - 40px);
+  border: 2px solid #0c0a00; /* Gold outline */
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  text-align: center;
+  background: #f8f7f5; /* Light gold background */
+}
+
+.step::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 254, 252, 0.7); /* Adjust opacity as needed */
+  z-index: 1;
+}
+
+.step-content {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+  color: #626060;
+}
+
+.step-content strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.step1 {
+  background: url(./images/Step1.jpg) no-repeat center center/cover;
+}
+
+.step2 {
+  background: url(./images/Step2.jpg) no-repeat center center/cover;
+}
+
+.step3 {
+  background: url(./images/Step3.jpg) no-repeat center center/cover;
+}
+
+.step4 {
+  background: url(./images/Step4.jpg) no-repeat center center/cover;
+}
+
+.register-button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 20px;
+  font-size: 16px;
+  color: #f9f4f4;
+  background-color: #f4ab0f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.register-button:hover {
+  background-color: #eece89;
+}
+
+@media (max-width: 768px) {
+  .intro {
+    padding: 0 10px;
+  }
+
+  .header-content h1 {
+    font-size: 3.5rem;
+  }
+
+  .header-content p {
+    font-size: 1.2rem;
+  }
+
+  .how-it-works {
+    flex-direction: column;
+  }
+
+  .step {
+    flex: 1 1 100%;
+  }
+}

@@ -1,0 +1,14 @@
+/* Footer.css */
+
+.footer {
+  border: 1px solid #f4ab0f;
+  background-color: rgba(255, 255, 255, 0.934);
+  color: rgb(5, 5, 5);
+  padding: 10px 20px;
+  text-align: center;
+}
+
+.footer a {
+  color: rgb(11, 11, 11);
+  text-decoration: none;
+}

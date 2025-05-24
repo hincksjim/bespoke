@@ -1,0 +1,129 @@
+type Payment @model @auth(rules: [{allow: public}]) {
+  id: ID!
+}
+
+type Notes @model @auth(rules: [{allow: public}]) {
+  id: ID!
+}
+
+type Artisanquote @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Amountquoted: Float
+}
+
+type Contact @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  artisanID: ID! @index(name: "byArtisan")
+  Position: String
+  Firstname: String
+  Surname: String
+  mobile: AWSPhone
+  isactive: Boolean
+  email: AWSEmail
+}
+
+type Artisan @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Companyname: String
+  Companyaddress: String
+  Companypostcode: String
+  isactive: Boolean
+  phone: AWSPhone
+  email: AWSEmail
+  interestedinMale: Boolean
+  interestedinfemale: Boolean
+  interestedinallgender: Boolean
+  interestedinrings: Boolean
+  interestedinnecklaces: Boolean
+  interestedinbraclets: Boolean
+  interestedinearrings: Boolean
+  interestedinchains: Boolean
+  interestedincufflinks: Boolean
+  interstedinaljewellrytypes: Boolean
+  agreedtoterms: Boolean
+  ipaddress: AWSIPAddress
+  Country: String
+  Currency: String
+  agreedtimestamp: AWSDateTime
+  Contacts: [Contact] @hasMany(indexName: "byArtisan", fields: ["id"])
+}
+
+type Creations @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  prompt: String
+  costprompt: String
+  gender: String
+  jewellrytype: String
+  material: String
+  kwt: String
+  stone: String
+  grade: String
+  Gemsource: String
+  ringsize: String
+  Style: String
+  ringstyle: String
+  gemsize: String
+  cut: String
+  url: AWSURL
+  colour: String
+  shape: String
+  accepteddate: AWSDate
+  ipaddress: AWSIPAddress
+  outstandingbalance: Float
+  requiredby: AWSDate
+  Estimatecostfrom: Float
+  Estimatecostto: Float
+  lastupdate: AWSDateTime
+  status: String
+  submittedforquote: Boolean
+  submittedfororder: Boolean
+  termsaccepted: Boolean
+  amontquoted: Float
+  submitteddate: AWSDate
+  clarity: String
+  bandwidth: String
+  Prompt_Strength: String
+  Similarity_Strength: String
+  seedurl: AWSURL
+  Necklace_Length: String
+  Bracelet_Length: String
+  Secondary_Gemstone: String
+  Earring_Fastening_Types: String
+  Bracelet_Clasp_Types: String
+  Ring_Band_Style: String
+  Ring_Setting: String
+  Necklace_Chain_Style: String
+  Bracelet_Chain_Style: String
+  Brooch_Fastening_Types: String
+  Gem_Settings: String
+  Necklace_Clasp: String
+  clientID: ID! @index(name: "byClient")
+  shared: Boolean
+  likes: Int
+}
+
+type Client @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: AWSEmail
+  mobile: AWSPhone
+  birthdate: AWSDate
+  isactive: Boolean
+  Address1: String
+  Address2: String
+  City: String
+  Postcode: String
+  Housenumber: String
+  updatedAt: AWSDateTime
+  createdAt: AWSDateTime
+  credits: Int
+  ipAddress: AWSIPAddress
+  Subscribed: Boolean
+  Role: String
+  clientID: [Creations] @hasMany(indexName: "byClient", fields: ["id"])
+  Country: String
+  Currency: String
+  IsArtisan: Boolean
+  Paywall: Int
+} 

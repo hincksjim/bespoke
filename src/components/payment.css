@@ -1,0 +1,274 @@
+/* Existing styles... */
+
+.payment-page .plans-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.payment-page .plan-option {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.payment-page .plan-option button {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-page .plan-option button:hover,
+.payment-page .plan-option button.selected {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
+
+.payment-page .plan-option h3 {
+    margin: 0 0 10px 0;
+}
+
+.payment-page .plan-option p {
+    margin: 0;
+}
+
+.payment-page .payment-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.payment-page .card-element-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.payment-page .submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.payment-page .submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.payment-page .submit-button svg {
+    margin-right: 10px;
+}
+
+.payment-page .error-message {
+    color: #9e2146;
+    margin-top: 10px;
+    text-align: center;
+}
+/* payment.css */
+.payment-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.options-container {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.option-box {
+  text-align: center;
+}
+
+.welcome-section {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+.plans-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.plan-option {
+  flex: 1;
+  margin: 0 10px;
+}
+
+.option-button {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option-button:hover {
+  border-color: #007bff;
+  background-color: #f0f7ff;
+}
+
+.option-button.selected {
+  border-color: #007bff;
+  background-color: #e6f2ff;
+}
+
+.option-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.card-element-container {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.submit-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.test-card-info {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.status-message {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.status-message.processing {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.status-message.success {
+  background-color: #e6f3e6;
+  color: green;
+}
+
+.status-message.error {
+  background-color: #f8e6e6;
+  color: red;
+}
+
+.payment-method-selection {
+  margin: 20px 0;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.payment-method-selection h3 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.payment-method-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-method-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.payment-method-option input {
+  margin-right: 10px;
+}
+
+.save-card-option {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.save-card-option label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.saved-cards-container {
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.saved-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.saved-card:hover {
+  background-color: #f0f0f0;
+}
+
+.saved-card.selected {
+  border-color: #4a90e2;
+  background-color: rgba(74, 144, 226, 0.05);
+}
+
+.card-logo {
+  margin-right: 12px;
+  color: #555;
+}

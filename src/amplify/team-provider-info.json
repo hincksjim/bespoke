@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bespoke2-dev-d3083-authRole",
+      "UnauthRoleArn": "arn:aws:iam::891376932758:role/amplify-bespoke2-dev-d3083-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::891376932758:role/amplify-bespoke2-dev-d3083-authRole",
+      "Region": "eu-west-2",
+      "DeploymentBucketName": "amplify-bespoke2-dev-d3083-deployment",
+      "UnauthRoleName": "amplify-bespoke2-dev-d3083-unauthRole",
+      "StackName": "amplify-bespoke2-dev-d3083",
+      "StackId": "arn:aws:cloudformation:eu-west-2:891376932758:stack/amplify-bespoke2-dev-d3083/b9ef4c80-e95e-11ef-bf4f-0acafdf2a981",
+      "AmplifyAppId": "dntdo97b800xv"
+    }
+  }
+}

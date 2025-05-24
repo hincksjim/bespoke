@@ -1,0 +1,125 @@
+/* SecondaryLoginVerification.css */
+
+.secondary-login-container {
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .auth-form h2 {
+    margin-bottom: 1rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .form-group label {
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .form-group input {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    transition: border-color 0.3s;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: #0078d4;
+    box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+  }
+  
+  .form-group small {
+    color: #666;
+    font-size: 0.8rem;
+  }
+  
+  .submit-button {
+    background-color: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .submit-button:hover {
+    background-color: #006bbe;
+  }
+  
+  .submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .auth-switch {
+    text-align: center;
+    margin-top: 1rem;
+    color: #555;
+  }
+  
+  .link-button {
+    background: none;
+    border: none;
+    color: #0078d4;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    text-decoration: underline;
+  }
+  
+  .link-button:hover {
+    color: #006bbe;
+  }
+  
+  .error-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #fdeded;
+    border: 1px solid #f1aaaa;
+    border-radius: 4px;
+    color: #d83030;
+  }
+  
+  /* Debug panel - remove in production */
+  .debug-panel {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+  
+  .debug-panel h4 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .debug-panel pre {
+    white-space: pre-wrap;
+    word-break: break-all;
+  }

@@ -1,0 +1,122 @@
+/* Header.css */
+
+.header {
+  background-color: rgba(255, 255, 255, 0.934);
+  border: 1px solid #f4ab0f;
+  border-radius: 4px;
+  color: rgb(255, 255, 255);
+  padding: 10px 20px;
+  
+}
+
+.navbar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.navbar ul li {
+  display: inline;
+}
+
+.navbar ul li a {
+  color:  #1f1e1e;
+  text-decoration: none;
+  font-size: 1.2em;
+}
+
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+.logo {
+  color: white;
+  font-size: 1.5em;
+}
+
+.nav-menu {
+  display: flex;
+}
+
+.nav-menu ul {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li {
+  margin-left: 20px;
+}
+
+.nav-menu a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.nav-menu a svg {
+  margin-right: 5px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.sign-out-button, .menu-toggle {
+  background: #f6f1f1;
+  border: #f4ab0f;
+  color: #141414;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.sign-out-button svg, .menu-toggle svg {
+  margin-right: 5px;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #f6f1f1;
+    padding: 20px;
+  }
+
+  .nav-menu.active {
+    display: block;
+  }
+
+  .nav-menu ul {
+    flex-direction: column;
+  }
+
+  .nav-menu li {
+    margin: 10px 0;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .sign-out-text {
+    display: none;
+  }
+}

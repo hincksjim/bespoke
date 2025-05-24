@@ -1,0 +1,58 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bespoke-dev-d98ab-authRole",
+      "UnauthRoleArn": "arn:aws:iam::891376932758:role/amplify-bespoke-dev-d98ab-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::891376932758:role/amplify-bespoke-dev-d98ab-authRole",
+      "Region": "eu-west-2",
+      "DeploymentBucketName": "amplify-bespoke-dev-d98ab-deployment",
+      "UnauthRoleName": "amplify-bespoke-dev-d98ab-unauthRole",
+      "StackName": "amplify-bespoke-dev-d98ab",
+      "StackId": "arn:aws:cloudformation:eu-west-2:891376932758:stack/amplify-bespoke-dev-d98ab/e5431870-87fd-11ef-ad54-02581055b851",
+      "AmplifyAppId": "d3vvydqrffh0pb"
+    },
+    "categories": {
+      "auth": {
+        "bespoke2fe31a052fe31a05": {}
+      },
+      "api": {
+        "bespoke": {}
+      }
+    }
+  },
+  "jewel": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bespoke-jewel-97685-authRole",
+      "UnauthRoleArn": "arn:aws:iam::891376932758:role/amplify-bespoke-jewel-97685-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::891376932758:role/amplify-bespoke-jewel-97685-authRole",
+      "Region": "eu-west-2",
+      "DeploymentBucketName": "amplify-bespoke-jewel-97685-deployment",
+      "UnauthRoleName": "amplify-bespoke-jewel-97685-unauthRole",
+      "StackName": "amplify-bespoke-jewel-97685",
+      "StackId": "arn:aws:cloudformation:eu-west-2:891376932758:stack/amplify-bespoke-jewel-97685/d3d83df0-88bf-11ef-b8d2-0aef3511c67d",
+      "AmplifyAppId": "d3vvydqrffh0pb"
+    },
+    "categories": {
+      "auth": {
+        "bespoke2fe31a052fe31a05": {},
+        "bespoke089077d9089077d9": {},
+        "bespoke87606a66": {},
+        "bespoke": {}
+      },
+      "storage": {
+        "bespoked2992eb2": {
+          "bucketName": "elegencejewllery-storage-63fc7a6c0e9b8-devjewll",
+          "region": "eu-west-2"
+        }
+      },
+      "api": {
+        "bespoke2": {}
+      },
+      "function": {
+        "bespokePostConfirmation": {
+          "GROUP": "client"
+        }
+      }
+    }
+  }
+}

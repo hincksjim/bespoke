@@ -1,0 +1,197 @@
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .dashboard-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Stats Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 640px) {
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .stats-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  .stat-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .stat-card-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    margin-right: 1rem;
+  }
+  
+  .stat-card-yellow .stat-card-icon-container {
+    background-color: #fefcbf;
+  }
+  
+  .stat-card-green .stat-card-icon-container {
+    background-color: #c6f6d5;
+  }
+  
+  .stat-card-blue .stat-card-icon-container {
+    background-color: #bee3f8;
+  }
+  
+  .stat-card-purple .stat-card-icon-container {
+    background-color: #e9d8fd;
+  }
+  
+  .stat-card-yellow .stat-card-icon {
+    color: #d69e2e;
+  }
+  
+  .stat-card-green .stat-card-icon {
+    color: #38a169;
+  }
+  
+  .stat-card-blue .stat-card-icon {
+    color: #3182ce;
+  }
+  
+  .stat-card-purple .stat-card-icon {
+    color: #805ad5;
+  }
+  
+  .stat-card-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .stat-card-content {
+    flex: 1;
+  }
+  
+  .stat-card-label {
+    font-size: 0.875rem;
+    color: #718096;
+    margin-bottom: 0.25rem;
+  }
+  
+  .stat-card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+  }
+  
+  /* Recent Quotes */
+  .recent-quotes-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+  }
+  
+  .recent-quotes-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .recent-quotes-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1a202c;
+  }
+  
+  .recent-quotes-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .recent-quote-item {
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.2s;
+  }
+  
+  .recent-quote-item:hover {
+    background-color: #f7fafc;
+  }
+  
+  .recent-quote-details {
+    flex: 1;
+  }
+  
+  .recent-quote-client {
+    font-weight: 500;
+    color: #1a202c;
+    margin-bottom: 0.25rem;
+  }
+  
+  .recent-quote-description {
+    font-size: 0.875rem;
+    color: #718096;
+  }
+  
+  .recent-quote-meta {
+    text-align: right;
+  }
+  
+  .recent-quote-value {
+    font-weight: 500;
+    color: #1a202c;
+    margin-bottom: 0.25rem;
+  }
+  
+  .recent-quote-date {
+    font-size: 0.75rem;
+    color: #a0aec0;
+  }
+  
+  .recent-quotes-empty {
+    padding: 2rem;
+    text-align: center;
+    color: #718096;
+  }
+  
+  .recent-quotes-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .view-all-button {
+    background: none;
+    border: none;
+    color: #3182ce;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .view-all-button:hover {
+    color: #2c5282;
+  }
+  

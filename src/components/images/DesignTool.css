@@ -1,0 +1,708 @@
+/* Reset some default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base styles for mobile-friendly design */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Design Tool Container */
+.design-tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content */
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: white;
+  border: 1px solid #f4ab0f;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px lightblue;
+}
+
+/* Options container styles */
+.options-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.option-group {
+  display: flex;
+  flex-wrap: wrap; /* Enable wrapping of buttons */
+  gap: 10px; /* Add some space between wrapped buttons */
+  margin-bottom: 10px;
+  padding: 15px;
+  border: 1px solid #f4ab0f;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.option-button, .manual-select-button, .webchat-button, .generate-images-button, .edit-image-button, .save-button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background-color: #fdf2d4;
+  cursor: pointer;
+  color: black;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+
+.option-button:hover, .manual-select-button:hover, .webchat-button:hover, .generate-images-button:hover, .edit-image-button:hover, .save-button:hover {
+  background-color: #f0f0f0;
+  border-color: #f4ab0f;
+}
+
+.option-button.selected, .manual-select-button.selected, .webchat-button.selected, .generate-images-button.selected, .edit-image-button.selected, .save-button.selected {
+  border: 2px solid #f4ab0f;
+  background-color: #fdf2d4;
+  padding: 8px 18px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Specific button styles */
+.manual-select-button {
+  background-color: #e0f7fa; /* Light cyan background */
+  border-color: #00bcd4; /* Cyan border */
+}
+
+.webchat-button {
+  background-color: #fff9c4; /* Light yellow background */
+  border-color: #fdd835; /* Yellow border */
+}
+
+.generate-images-button {
+  background-color: #c5cae9; /* Light blue background */
+  border-color: #3f51b5; /* Blue border */
+}
+
+.edit-image-button {
+  background-color: #ffccbc; /* Light orange background */
+  border-color: #ff5722; /* Orange border */
+}
+
+.save-button {
+  background-color: #f4ab0f; /* Gold background */
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #e09e2d;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Image generation section styles */
+.image-generation-section {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.image-generation-section h3 {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 18px;
+}
+
+.generated-images {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.generated-images img {
+  flex: 1;
+  max-width: 33%;
+  height: auto;
+  border: 1px solid #ccc;
+  padding: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 0 5px transparent; /* For selected border */
+}
+
+.generated-images img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 5px rgba(244, 171, 15, 0.3);
+}
+
+.generated-images img.selected {
+  box-shadow: 0 0 0 5px gold; /* Gold border for selected image */
+}
+
+/* Main Image Section */
+.main-image-section {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  margin-bottom: 30px; /* Increased bottom margin */
+}
+
+.main-image-section h3 {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 18px;
+}
+
+.main-image-section img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation Arrows */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  color: #333;
+}
+
+.nav-arrow.left {
+  left: 10px;
+}
+
+.nav-arrow.right {
+  right: 10px;
+}
+
+/* Save Button Section */
+.save-button-section {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px; /* Margin above button */
+}
+
+.save-button {
+  padding: 10px 20px;
+  border: 1px solid #f4ab0f;
+  background-color: #f4ab0f;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.save-button:hover {
+  background-color: #e09e2d;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Edit Prompt Section */
+.edit-prompt-section {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #f4ab0f;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-prompt-section h3 {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 18px;
+}
+
+.edit-prompt-section textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: inherit;
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Cost Estimate Section */
+.cost-estimate-section {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Rotation Wheel Animation */
+.animate-spin { 
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  /* Stack option buttons vertically */
+  .option-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-button, .manual-select-button, .webchat-button, .generate-images-button, .edit-image-button, .save-button {
+    width: 100%; /* Full width for buttons on mobile */
+    padding: 10px;
+  }
+
+  /* Adjust layout for small screens */
+  .image-generation-section,
+  .main-image-section,
+  .edit-prompt-section,
+  .save-button-section {
+    width: 100%;
+  }
+
+  /* Make generated images smaller on mobile */
+  .generated-images img {
+    width: 90px;
+  }
+
+  /* Adjust main image size on mobile */
+  .main-image-section img {
+    max-width: 90%;
+  }
+}
+.welcome-section {
+  background-color: #f0f8ff;
+  border: 1px solid #b0e0e6;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.welcome-section p {
+  margin-bottom: 5px;
+}
+
+/* Error message styles */
+.error-message {
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  color: #b71c1c;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* Seed image upload styles */
+.seed-image-upload {
+  background-color: #f1f8e9;
+  border: 1px solid #dcedc8;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.seed-image-preview {
+  max-width: 300px;
+  margin: 10px auto;
+}
+
+.seed-image-preview img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Prompt strength section styles */
+.prompt-strength-section {
+  background-color: #fff3e0;
+  border: 1px solid #ffe0b2;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+/* Design method selection styles */
+.design-method-selection {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Prompt section styles */
+.prompt-section {
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.prompt-section textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+}
+
+/* Generated images grid styles */
+.generated-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.image-placeholder {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .design-method-selection {
+    flex-direction: column;
+  }
+
+  .generated-images {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Account status colors */
+.text-red-500 {
+  color: #f44336;
+}
+
+.text-green-500 {
+  color: #4caf50;
+}
+
+.text-amber-500 {
+  color: #ffc107;
+}
+
+/* Button styles for disabled state */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Additional utility classes */
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.object-cover {
+  object-fit: cover;
+}
+
+.h-48 {
+  height: 12rem;
+}
+.gem-shape-image {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.gem-shape-image-container {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.gem-shape-placeholder {
+  width: 50px;
+  height: 50px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+.option-button {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.option-button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.option-button.selected {
+  background-color: #e0e0e0;
+  font-weight: bold;
+}
+
+.option-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.option-text {
+  margin-left: 10px;
+}
+/* Add these styles to your existing DesignTool.css file */
+
+.design-tool {
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.card-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card-footer {
+  position :bottom;
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.welcome-section {
+  margin-bottom: 20px;
+}
+
+.text-red { color: #ff0000; }
+.text-amber { color: #ffa500; }
+.text-green { color: #008000; }
+
+.error-message {
+  color: #ff0000;
+  margin-bottom: 10px;
+}
+
+.sign-out-button, .method-button, .save-button, .generate-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sign-out-button:hover, .method-button:hover, .save-button:hover, .generate-button:hover {
+  background-color: #0056b3;
+}
+
+.file-input {
+  margin-bottom: 10px;
+}
+
+.seed-image-preview {
+  margin-top: 10px;
+}
+
+.preview-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.option-group {
+  margin-bottom: 20px;
+}
+
+.option-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.option-button.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+.text-input, .text-area, .select-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.text-area {
+  height: 100px;
+}
+
+.generated-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.image-placeholder {
+  background-color: #f0f0f0;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.generated-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.main-image-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.main-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.cost-estimate-section {
+  margin-top: 20px;
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loader {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

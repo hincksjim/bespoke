@@ -1,0 +1,77 @@
+/* Existing styles... */
+
+.payment-page .plans-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.payment-page .plan-option {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.payment-page .plan-option button {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-page .plan-option button:hover,
+.payment-page .plan-option button.selected {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
+
+.payment-page .plan-option h3 {
+    margin: 0 0 10px 0;
+}
+
+.payment-page .plan-option p {
+    margin: 0;
+}
+
+.payment-page .payment-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.payment-page .card-element-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.payment-page .submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.payment-page .submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.payment-page .submit-button svg {
+    margin-right: 10px;
+}
+
+.payment-page .error-message {
+    color: #9e2146;
+    margin-top: 10px;
+    text-align: center;
+}

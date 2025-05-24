@@ -1,0 +1,1421 @@
+
+.design-tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #374151;
+  min-height: 100vh;
+}
+
+.options-container {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.card-header {
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.card-description {
+  font-size: 16px;
+  color: #666;
+}
+
+.card-content {
+  margin-bottom: 20px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.welcome-section {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.welcome-text {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.user-name {
+  font-weight: bold;
+}
+
+.credits {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.status {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.sign-out-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sign-out-button:hover {
+  background-color: #d32f2f;
+}
+
+.error-message {
+  color: #f44336;
+  margin-bottom: 10px;
+}
+
+.seed-image-upload {
+  margin-bottom: 20px;
+}
+
+.file-input {
+  margin-bottom: 10px;
+}
+
+.seed-image-preview {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.prompt-strength-section {
+  margin-top: 20px;
+}
+
+.design-method-selection {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.method-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.method-button:hover {
+  background-color: #45a049;
+}
+
+.option-group {
+  margin-bottom: 20px;
+}
+
+.option-button {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.option-button:hover {
+  background-color: #f0f0f0;
+}
+
+.option-button.selected {
+  background-color: #4caf50;
+  color: white;
+}
+
+.gem-shape-image-container,
+.gemstone-image-container {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.gem-shape-image,
+.gemstone-image {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.gemstone-color-container {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.option-text {
+  vertical-align: middle;
+}
+
+.generate-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.generate-button:hover {
+  background-color: #1e88e5;
+}
+
+.generate-button.disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+}
+
+.image-generation-section {
+  width: 100%;
+  max-width: 800px;
+}
+
+.generated-images {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.image-placeholder {
+  width: 30%;
+  height: 200px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.generated-image {
+  width: 30%;
+  height: 200px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.generated-image:hover {
+  transform: scale(1.05);
+}
+
+.main-image-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.main-image {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.create-variations-button,
+.save-button,
+.restart-button,
+.gallery-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.create-variations-button:hover,
+.save-button:hover,
+.restart-button:hover {
+  background-color: #1e88e5;
+}
+
+.create-variations-button.disabled,
+.save-button.disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+}
+
+.cost-estimate-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.custom-prompt-section {
+  margin-top: 20px;
+}
+
+.select-input,
+.text-input,
+.textarea-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.textarea-input {
+  height: 100px;
+  resize: vertical;
+}
+
+.save-prompt-button,
+.delete-prompt-button {
+  width: 48%;
+}
+
+.deactivated-account {
+  text-align: center;
+  padding: 20px;
+}
+Private v0 Chat – v0 by Vercel
+snippet.txtsnippet.txt
+snippet.txt
+
+
+
+.design-tool {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.option-button {
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  transition: all 0.2s ease-in-out;
+}
+.option-button:hover {
+  background-color: #e5e7eb;
+}
+.option-button:focus {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+.generate-button {
+  background-color: #3b82f6;
+  color: #ffffff;
+  transition: all 0.2s ease-in-out;
+}
+.generate-button:hover {
+  background-color: #2563eb;
+}
+.generate-button:focus {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+.generate-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .design-tool {
+    padding: 1rem;
+  }
+  .option-button,
+  .generate-button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+/* Accessibility improvements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+/* Focus styles for better keyboard navigation */
+:focus {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+/* Custom scrollbar for better user experience */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+/* Reset some default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* Base styles for mobile-friendly design */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+/* Design Tool Container */
+.design-tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content */
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: white;
+  border: 1px solid #f4ab0f;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px lightblue;
+}
+/* Options container styles */
+.options-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.option-group {
+  display: flex;
+  flex-wrap: wrap; /* Enable wrapping of buttons */
+  gap: 10px; /* Add some space between wrapped buttons */
+  margin-bottom: 10px;
+  padding: 15px;
+  border: 1px solid #f4ab0f;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+}
+.option-button, .manual-select-button, .webchat-button, .generate-images-button, .edit-image-button, .save-button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background-color: #fdf2d4;
+  cursor: pointer;
+  color: black;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+.option-button:hover, .manual-select-button:hover, .webchat-button:hover, .generate-images-button:hover, .edit-image-button:hover, .save-button:hover {
+  background-color: #f0f0f0;
+  border-color: #f4ab0f;
+}
+.option-button.selected, .manual-select-button.selected, .webchat-button.selected, .generate-images-button.selected, .edit-image-button.selected, .save-button.selected {
+  border: 2px solid #f4ab0f;
+  background-color: #fdf2d4;
+  padding: 8px 18px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+/* Specific button styles */
+.manual-select-button {
+  background-color: #e0f7fa; /* Light cyan background */
+  border-color: #00bcd4; /* Cyan border */
+}
+.webchat-button {
+  background-color: #fff9c4; /* Light yellow background */
+  border-color: #fdd835; /* Yellow border */
+}
+.generate-images-button {
+  background-color: #c5cae9; /* Light blue background */
+  border-color: #3f51b5; /* Blue border */
+}
+.edit-image-button {
+  background-color: #ffccbc; /* Light orange background */
+  border-color: #ff5722; /* Orange border */
+}
+.save-button {
+  background-color: #f4ab0f; /* Gold background */
+  color: white;
+}
+.save-button:hover {
+  background-color: #e09e2d;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+/* Image generation section styles */
+.image-generation-section {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.image-generation-section h3 {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 18px;
+}
+.generated-images {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.generated-images img {
+  flex: 1;
+  max-width: 33%;
+  height: auto;
+  border: 1px solid #ccc;
+  padding: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 0 5px transparent; /* For selected border */
+}
+.generated-images img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 5px rgba(244, 171, 15, 0.3);
+}
+.generated-images img.selected {
+  box-shadow: 0 0 0 5px gold; /* Gold border for selected image */
+}
+/* Main Image Section */
+.main-image-section {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  margin-bottom: 30px; /* Increased bottom margin */
+}
+.main-image-section h3 {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 18px;
+}
+.main-image-section img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+}
+/* Navigation Arrows */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  color: #333;
+}
+.nav-arrow.left {
+  left: 10px;
+}
+.nav-arrow.right {
+  right: 10px;
+}
+/* Save Button Section */
+.save-button-section {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px; /* Margin above button */
+}
+.save-button {
+  padding: 10px 20px;
+  border: 1px solid #f4ab0f;
+  background-color: #f4ab0f;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.save-button:hover {
+  background-color: #e09e2d;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+/* Edit Prompt Section */
+.edit-prompt-section {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #f4ab0f;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+}
+.edit-prompt-section h3 {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 18px;
+}
+.edit-prompt-section textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: inherit;
+  min-height: 80px;
+  resize: vertical;
+}
+/* Cost Estimate Section */
+.cost-estimate-section {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #333;
+}
+/* Rotation Wheel Animation */
+.animate-spin { 
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* Responsive styling */
+@media (max-width: 768px) {
+  /* Stack option buttons vertically */
+  .option-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option-button, .manual-select-button, .webchat-button, .generate-images-button, .edit-image-button, .save-button {
+    width: 100%; /* Full width for buttons on mobile */
+    padding: 10px;
+  }
+  /* Adjust layout for small screens */
+  .image-generation-section,
+  .main-image-section,
+  .edit-prompt-section,
+  .save-button-section {
+    width: 100%;
+  }
+  /* Make generated images smaller on mobile */
+  .generated-images img {
+    width: 90px;
+  }
+  /* Adjust main image size on mobile */
+  .main-image-section img {
+    max-width: 90%;
+  }
+}
+.welcome-section {
+  background-color: #f0f8ff;
+  border: 1px solid #b0e0e6;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+.welcome-section p {
+  margin-bottom: 5px;
+}
+/* Error message styles */
+.error-message {
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  color: #b71c1c;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+/* Seed image upload styles */
+.seed-image-upload {
+  background-color: #f1f8e9;
+  border: 1px solid #dcedc8;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+.seed-image-preview {
+  max-width: 300px;
+  margin: 10px auto;
+}
+.seed-image-preview img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+/* Prompt strength section styles */
+.prompt-strength-section {
+  background-color: #fff3e0;
+  border: 1px solid #ffe0b2;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 20px;
+}
+/* Design method selection styles */
+.design-method-selection {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+/* Prompt section styles */
+.prompt-section {
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 20px;
+}
+.prompt-section textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+}
+/* Generated images grid styles */
+.generated-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.image-placeholder {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .design-method-selection {
+    flex-direction: column;
+  }
+  .generated-images {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* Account status colors */
+.text-red-500 {
+  color: #f44336;
+}
+.text-green-500 {
+  color: #4caf50;
+}
+.text-amber-500 {
+  color: #ffc107;
+}
+/* Button styles for disabled state */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* Additional utility classes */
+.font-semibold {
+  font-weight: 600;
+}
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+.mt-2 {
+  margin-top: 0.5rem;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.mt-8 {
+  margin-top: 2rem;
+}
+.w-full {
+  width: 100%;
+}
+.max-w-md {
+  max-width: 28rem;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.text-center {
+  text-align: center;
+}
+.flex {
+  display: flex;
+}
+.items-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
+.h-screen {
+  height: 100vh;
+}
+.rounded {
+  border-radius: 0.25rem;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.object-cover {
+  object-fit: cover;
+}
+.h-48 {
+  height: 12rem;
+}
+.gem-shape-image {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.gem-shape-image-container {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+.gem-shape-placeholder {
+  width: 50px;
+  height: 50px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+.option-button {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.option-button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+.option-button.selected {
+  background-color: #e0e0e0;
+  font-weight: bold;
+}
+.option-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.option-text {
+  margin-left: 10px;
+}
+/* Add these styles to your existing DesignTool.css file */
+.design-tool {
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+.card-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.card-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+.card-content {
+  padding: 20px;
+}
+.card-footer {
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+.welcome-section {
+  margin-bottom: 20px;
+}
+.text-red { color: #ff0000; }
+.text-amber { color: #ffa500; }
+.text-green { color: #008000; }
+.error-message {
+  color: #ff0000;
+  margin-bottom: 10px;
+}
+.sign-out-button, .method-button, .save-button, .generate-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.sign-out-button:hover, .method-button:hover, .save-button:hover, .generate-button:hover {
+  background-color: #0056b3;
+}
+.file-input {
+  margin-bottom: 10px;
+}
+.seed-image-preview {
+  margin-top: 10px;
+}
+.preview-image {
+  max-width: 100%;
+  height: auto;
+}
+.option-group {
+  margin-bottom: 20px;
+}
+.option-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.option-button.selected {
+  background-color: #007bff;
+  color: white;
+}
+.text-input, .text-area, .select-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.text-area {
+  height: 100px;
+}
+.generated-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+.image-placeholder {
+  background-color: #f0f0f0;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.generated-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  cursor: pointer;
+}
+.main-image-section {
+  margin-top: 20px;
+  text-align: center;
+}
+.main-image {
+  max-width: 100%;
+  height: auto;
+}
+.cost-estimate-section {
+  margin-top: 20px;
+}
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.loader {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.restart-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+.restart-button:hover {
+  background-color: #d32f2f;
+}
+.design-tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.options-container {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.card-header {
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.card-description {
+  font-size: 16px;
+  color: #666;
+}
+
+.card-content {
+  margin-bottom: 20px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.welcome-section {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.welcome-text {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #4a90e2;
+}
+
+.credits {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.status {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.text-red {
+  color: #e74c3c;
+}
+
+.text-amber {
+  color: #f39c12;
+}
+
+.text-green {
+  color: #2ecc71;
+}
+
+.sign-out-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sign-out-button:hover {
+  background-color: #c0392b;
+}
+
+.error-message {
+  color: #e74c3c;
+  margin-bottom: 10px;
+}
+
+.seed-image-upload {
+  margin-bottom: 20px;
+}
+
+.file-input {
+  margin-bottom: 10px;
+}
+
+.seed-image-preview {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.prompt-strength-section {
+  margin-top: 20px;
+}
+
+.design-method-selection {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.method-button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.method-button:hover {
+  background-color: #3a7bc8;
+}
+
+.option-group {
+  margin-bottom: 20px;
+}
+
+.option-group h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.option-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.option-button:hover {
+  background-color: #e0e0e0;
+}
+
+.option-button.selected {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.gem-shape-image-container,
+.gemstone-image-container {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.gem-shape-image,
+.gemstone-image {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.gemstone-color-container {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.option-text {
+  vertical-align: middle;
+}
+
+.generate-button {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.generate-button:hover {
+  background-color: #27ae60;
+}
+
+.generate-button.disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.image-generation-section {
+  width: 100%;
+  max-width: 800px;
+}
+
+.generated-images {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.image-placeholder {
+  width: 30%;
+  height: 200px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.generated-image {
+  width: 30%;
+  height: 200px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.generated-image:hover {
+  transform: scale(1.05);
+}
+
+.main-image-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.main-image {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.create-variations-button,
+.save-button,
+.restart-button,
+.gallery-button {
+  background-color: #4a90e2;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.create-variations-button:hover,
+.save-button:hover,
+.restart-button:hover {
+  background-color: #f39c12;
+}
+
+.create-variations-button.disabled,
+.save-button.disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.cost-estimate-section {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.cost-estimate-section h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.custom-prompt-section {
+  margin-top: 20px;
+}
+
+.select-input,
+.text-input,
+.textarea-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.textarea-input {
+  height: 100px;
+  resize: vertical;
+}
+
+.save-prompt-button,
+.delete-prompt-button {
+  width: 48%;
+}
+
+.deactivated-account {
+  text-align: center;
+  padding: 20px;
+}
+
+.deactivated-account h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .design-method-selection {
+      flex-direction: column;
+  }
+
+  .method-button {
+      margin-bottom: 10px;
+  }
+
+  .generated-images {
+      flex-direction: column;
+  }
+
+  .generated-image {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  .button-container {
+      flex-direction: column;
+  }
+
+  .create-variations-button,
+  .save-button,
+  .restart-button {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+}
+
+/* Add this to your existing CSS file */
+.budget-info {
+  background-color: #f8f9fa;
+  border-left: 3px solid #4a90e2;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+.option-button.selected {
+  background-color: #e6f7ff;
+  border-color: #1890ff;
+  color: #1890ff;
+  font-weight: bold;
+}
+
+/* Style for budget options */
+.option-group h3:first-of-type {
+  color: #1890ff;
+  font-weight: bold;
+}
+
+/* Highlight default selections based on budget */
+.option-button.default-selection {
+  border: 2px dashed #1890ff;
+}
+
+/* Add tooltip for budget-restricted options */
+.option-button.restricted {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.option-button.restricted:hover::after {
+  content: "This option requires a higher budget";
+  position: absolute;
+  background: #333;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  z-index: 100;
+  top: -30px;
+  left: 0;
+  white-space: nowrap;
+}
+
+/* Success message styling */
+.success-message {
+  background-color: #e6f7e6;
+  border: 1px solid #b7deb7;
+  border-left: 3px solid #28a745;
+  color: #155724;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}

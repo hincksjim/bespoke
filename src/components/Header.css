@@ -1,0 +1,139 @@
+/* Header.css */
+
+.header {
+  background-color: rgba(255, 255, 255, 0.934);
+  border: 1px solid #f4ab0f;
+  border-radius: 4px;
+  padding: 10px 20px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-menu {
+  display: flex;
+}
+
+.nav-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.nav-menu li {
+  margin-left: 20px;
+}
+
+.nav-menu a {
+  color: #1f1e1e;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  color: #1f1e1e;
+  font-size: 1.5em;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.country-button {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #1f1e1e;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.flag-icon {
+  margin-right: 8px;
+}
+
+.country-dropdown {
+  background-color: #ffffff;
+  border: 1px solid #f4ab0f;
+  border-radius: 4px;
+}
+
+.country-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #1f1e1e;
+  cursor: pointer;
+}
+
+.country-item:hover {
+  background-color: rgba(255, 255, 255, 0.934);
+}
+
+.currency-display {
+  margin-right: 16px;
+  font-size: 1em;
+}
+
+.sign-out-button,
+.menu-toggle {
+  background: #f4ab0f;
+  border: 2px solid #1f1e1e;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.sign-out-button:hover,
+.menu-toggle:hover {
+  background: #ffffff;
+  color: #f4ab0f;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    z-index: 1000;
+  }
+
+  .nav-menu.active {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .navbar {
+    flex-direction: column;
+  }
+
+  .header-actions {
+    margin-top: 10px;
+  }
+}
