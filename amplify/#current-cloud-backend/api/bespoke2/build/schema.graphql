@@ -1,0 +1,1146 @@
+type Payment @aws_iam @aws_api_key {
+  id: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Notes @aws_iam @aws_api_key {
+  id: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Artisanquote @aws_iam @aws_api_key {
+  id: ID!
+  Amountquoted: Float
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Contact @aws_iam @aws_api_key {
+  id: ID!
+  artisanID: ID!
+  Position: String
+  Firstname: String
+  Surname: String
+  mobile: AWSPhone
+  isactive: Boolean
+  email: AWSEmail
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Artisan @aws_iam @aws_api_key {
+  id: ID!
+  Companyname: String
+  Companyaddress: String
+  Companypostcode: String
+  isactive: Boolean
+  phone: AWSPhone
+  email: AWSEmail
+  interestedinMale: Boolean
+  interestedinfemale: Boolean
+  interestedinallgender: Boolean
+  interestedinrings: Boolean
+  interestedinnecklaces: Boolean
+  interestedinbraclets: Boolean
+  interestedinearrings: Boolean
+  interestedinchains: Boolean
+  interestedincufflinks: Boolean
+  interstedinaljewellrytypes: Boolean
+  agreedtoterms: Boolean
+  ipaddress: AWSIPAddress
+  Country: String
+  Currency: String
+  agreedtimestamp: AWSDateTime
+  Contacts(filter: ModelContactFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelContactConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Creations @aws_iam @aws_api_key {
+  id: ID!
+  prompt: String
+  costprompt: String
+  gender: String
+  jewellrytype: String
+  material: String
+  kwt: String
+  stone: String
+  grade: String
+  Gemsource: String
+  ringsize: String
+  Style: String
+  ringstyle: String
+  gemsize: String
+  cut: String
+  url: AWSURL
+  colour: String
+  shape: String
+  accepteddate: AWSDate
+  ipaddress: AWSIPAddress
+  outstandingbalance: Float
+  requiredby: AWSDate
+  Estimatecostfrom: Float
+  Estimatecostto: Float
+  lastupdate: AWSDateTime
+  status: String
+  submittedforquote: Boolean
+  submittedfororder: Boolean
+  termsaccepted: Boolean
+  amontquoted: Float
+  submitteddate: AWSDate
+  clarity: String
+  bandwidth: String
+  Prompt_Strength: String
+  Similarity_Strength: String
+  seedurl: AWSURL
+  Necklace_Length: String
+  Bracelet_Length: String
+  Secondary_Gemstone: String
+  Earring_Fastening_Types: String
+  Bracelet_Clasp_Types: String
+  Ring_Band_Style: String
+  Ring_Setting: String
+  Necklace_Chain_Style: String
+  Bracelet_Chain_Style: String
+  Brooch_Fastening_Types: String
+  Gem_Settings: String
+  Necklace_Clasp: String
+  clientID: ID!
+  shared: Boolean
+  likes: Int
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Client @aws_iam @aws_api_key {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: AWSEmail
+  mobile: AWSPhone
+  birthdate: AWSDate
+  isactive: Boolean
+  Address1: String
+  Address2: String
+  City: String
+  Postcode: String
+  Housenumber: String
+  updatedAt: AWSDateTime
+  createdAt: AWSDateTime
+  credits: Int
+  ipAddress: AWSIPAddress
+  Subscribed: Boolean
+  Role: String
+  clientID(filter: ModelCreationsFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelCreationsConnection
+  Country: String
+  Currency: String
+  IsArtisan: Boolean
+  Paywall: Int
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelSubscriptionStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  in: [String]
+  notIn: [String]
+}
+
+input ModelSubscriptionIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  in: [Int]
+  notIn: [Int]
+}
+
+input ModelSubscriptionFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  in: [Float]
+  notIn: [Float]
+}
+
+input ModelSubscriptionBooleanInput {
+  ne: Boolean
+  eq: Boolean
+}
+
+input ModelSubscriptionIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  in: [ID]
+  notIn: [ID]
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelPaymentConnection @aws_api_key @aws_iam {
+  items: [Payment]!
+  nextToken: String
+}
+
+input ModelPaymentFilterInput {
+  id: ModelIDInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelPaymentFilterInput]
+  or: [ModelPaymentFilterInput]
+  not: ModelPaymentFilterInput
+}
+
+type Query {
+  getPayment(id: ID!): Payment @aws_api_key @aws_iam
+  listPayments(filter: ModelPaymentFilterInput, limit: Int, nextToken: String): ModelPaymentConnection @aws_api_key @aws_iam
+  getNotes(id: ID!): Notes @aws_api_key @aws_iam
+  listNotes(filter: ModelNotesFilterInput, limit: Int, nextToken: String): ModelNotesConnection @aws_api_key @aws_iam
+  getArtisanquote(id: ID!): Artisanquote @aws_api_key @aws_iam
+  listArtisanquotes(filter: ModelArtisanquoteFilterInput, limit: Int, nextToken: String): ModelArtisanquoteConnection @aws_api_key @aws_iam
+  getContact(id: ID!): Contact @aws_api_key @aws_iam
+  listContacts(filter: ModelContactFilterInput, limit: Int, nextToken: String): ModelContactConnection @aws_api_key @aws_iam
+  contactsByArtisanID(artisanID: ID!, sortDirection: ModelSortDirection, filter: ModelContactFilterInput, limit: Int, nextToken: String): ModelContactConnection @aws_api_key @aws_iam
+  getArtisan(id: ID!): Artisan @aws_api_key @aws_iam
+  listArtisans(filter: ModelArtisanFilterInput, limit: Int, nextToken: String): ModelArtisanConnection @aws_api_key @aws_iam
+  getCreations(id: ID!): Creations @aws_api_key @aws_iam
+  listCreations(filter: ModelCreationsFilterInput, limit: Int, nextToken: String): ModelCreationsConnection @aws_api_key @aws_iam
+  creationsByClientID(clientID: ID!, sortDirection: ModelSortDirection, filter: ModelCreationsFilterInput, limit: Int, nextToken: String): ModelCreationsConnection @aws_api_key @aws_iam
+  getClient(id: ID!): Client @aws_api_key @aws_iam
+  listClients(filter: ModelClientFilterInput, limit: Int, nextToken: String): ModelClientConnection @aws_api_key @aws_iam
+}
+
+input ModelPaymentConditionInput {
+  and: [ModelPaymentConditionInput]
+  or: [ModelPaymentConditionInput]
+  not: ModelPaymentConditionInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+}
+
+input CreatePaymentInput {
+  id: ID
+}
+
+input UpdatePaymentInput {
+  id: ID!
+}
+
+input DeletePaymentInput {
+  id: ID!
+}
+
+type Mutation {
+  createPayment(input: CreatePaymentInput!, condition: ModelPaymentConditionInput): Payment @aws_api_key @aws_iam
+  updatePayment(input: UpdatePaymentInput!, condition: ModelPaymentConditionInput): Payment @aws_api_key @aws_iam
+  deletePayment(input: DeletePaymentInput!, condition: ModelPaymentConditionInput): Payment @aws_api_key @aws_iam
+  createNotes(input: CreateNotesInput!, condition: ModelNotesConditionInput): Notes @aws_api_key @aws_iam
+  updateNotes(input: UpdateNotesInput!, condition: ModelNotesConditionInput): Notes @aws_api_key @aws_iam
+  deleteNotes(input: DeleteNotesInput!, condition: ModelNotesConditionInput): Notes @aws_api_key @aws_iam
+  createArtisanquote(input: CreateArtisanquoteInput!, condition: ModelArtisanquoteConditionInput): Artisanquote @aws_api_key @aws_iam
+  updateArtisanquote(input: UpdateArtisanquoteInput!, condition: ModelArtisanquoteConditionInput): Artisanquote @aws_api_key @aws_iam
+  deleteArtisanquote(input: DeleteArtisanquoteInput!, condition: ModelArtisanquoteConditionInput): Artisanquote @aws_api_key @aws_iam
+  createContact(input: CreateContactInput!, condition: ModelContactConditionInput): Contact @aws_api_key @aws_iam
+  updateContact(input: UpdateContactInput!, condition: ModelContactConditionInput): Contact @aws_api_key @aws_iam
+  deleteContact(input: DeleteContactInput!, condition: ModelContactConditionInput): Contact @aws_api_key @aws_iam
+  createArtisan(input: CreateArtisanInput!, condition: ModelArtisanConditionInput): Artisan @aws_api_key @aws_iam
+  updateArtisan(input: UpdateArtisanInput!, condition: ModelArtisanConditionInput): Artisan @aws_api_key @aws_iam
+  deleteArtisan(input: DeleteArtisanInput!, condition: ModelArtisanConditionInput): Artisan @aws_api_key @aws_iam
+  createCreations(input: CreateCreationsInput!, condition: ModelCreationsConditionInput): Creations @aws_api_key @aws_iam
+  updateCreations(input: UpdateCreationsInput!, condition: ModelCreationsConditionInput): Creations @aws_api_key @aws_iam
+  deleteCreations(input: DeleteCreationsInput!, condition: ModelCreationsConditionInput): Creations @aws_api_key @aws_iam
+  createClient(input: CreateClientInput!, condition: ModelClientConditionInput): Client @aws_api_key @aws_iam
+  updateClient(input: UpdateClientInput!, condition: ModelClientConditionInput): Client @aws_api_key @aws_iam
+  deleteClient(input: DeleteClientInput!, condition: ModelClientConditionInput): Client @aws_api_key @aws_iam
+}
+
+input ModelSubscriptionPaymentFilterInput {
+  id: ModelSubscriptionIDInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionPaymentFilterInput]
+  or: [ModelSubscriptionPaymentFilterInput]
+}
+
+type Subscription {
+  onCreatePayment(filter: ModelSubscriptionPaymentFilterInput): Payment @aws_subscribe(mutations: ["createPayment"]) @aws_api_key @aws_iam
+  onUpdatePayment(filter: ModelSubscriptionPaymentFilterInput): Payment @aws_subscribe(mutations: ["updatePayment"]) @aws_api_key @aws_iam
+  onDeletePayment(filter: ModelSubscriptionPaymentFilterInput): Payment @aws_subscribe(mutations: ["deletePayment"]) @aws_api_key @aws_iam
+  onCreateNotes(filter: ModelSubscriptionNotesFilterInput): Notes @aws_subscribe(mutations: ["createNotes"]) @aws_api_key @aws_iam
+  onUpdateNotes(filter: ModelSubscriptionNotesFilterInput): Notes @aws_subscribe(mutations: ["updateNotes"]) @aws_api_key @aws_iam
+  onDeleteNotes(filter: ModelSubscriptionNotesFilterInput): Notes @aws_subscribe(mutations: ["deleteNotes"]) @aws_api_key @aws_iam
+  onCreateArtisanquote(filter: ModelSubscriptionArtisanquoteFilterInput): Artisanquote @aws_subscribe(mutations: ["createArtisanquote"]) @aws_api_key @aws_iam
+  onUpdateArtisanquote(filter: ModelSubscriptionArtisanquoteFilterInput): Artisanquote @aws_subscribe(mutations: ["updateArtisanquote"]) @aws_api_key @aws_iam
+  onDeleteArtisanquote(filter: ModelSubscriptionArtisanquoteFilterInput): Artisanquote @aws_subscribe(mutations: ["deleteArtisanquote"]) @aws_api_key @aws_iam
+  onCreateContact(filter: ModelSubscriptionContactFilterInput): Contact @aws_subscribe(mutations: ["createContact"]) @aws_api_key @aws_iam
+  onUpdateContact(filter: ModelSubscriptionContactFilterInput): Contact @aws_subscribe(mutations: ["updateContact"]) @aws_api_key @aws_iam
+  onDeleteContact(filter: ModelSubscriptionContactFilterInput): Contact @aws_subscribe(mutations: ["deleteContact"]) @aws_api_key @aws_iam
+  onCreateArtisan(filter: ModelSubscriptionArtisanFilterInput): Artisan @aws_subscribe(mutations: ["createArtisan"]) @aws_api_key @aws_iam
+  onUpdateArtisan(filter: ModelSubscriptionArtisanFilterInput): Artisan @aws_subscribe(mutations: ["updateArtisan"]) @aws_api_key @aws_iam
+  onDeleteArtisan(filter: ModelSubscriptionArtisanFilterInput): Artisan @aws_subscribe(mutations: ["deleteArtisan"]) @aws_api_key @aws_iam
+  onCreateCreations(filter: ModelSubscriptionCreationsFilterInput): Creations @aws_subscribe(mutations: ["createCreations"]) @aws_api_key @aws_iam
+  onUpdateCreations(filter: ModelSubscriptionCreationsFilterInput): Creations @aws_subscribe(mutations: ["updateCreations"]) @aws_api_key @aws_iam
+  onDeleteCreations(filter: ModelSubscriptionCreationsFilterInput): Creations @aws_subscribe(mutations: ["deleteCreations"]) @aws_api_key @aws_iam
+  onCreateClient(filter: ModelSubscriptionClientFilterInput): Client @aws_subscribe(mutations: ["createClient"]) @aws_api_key @aws_iam
+  onUpdateClient(filter: ModelSubscriptionClientFilterInput): Client @aws_subscribe(mutations: ["updateClient"]) @aws_api_key @aws_iam
+  onDeleteClient(filter: ModelSubscriptionClientFilterInput): Client @aws_subscribe(mutations: ["deleteClient"]) @aws_api_key @aws_iam
+}
+
+type ModelNotesConnection @aws_api_key @aws_iam {
+  items: [Notes]!
+  nextToken: String
+}
+
+input ModelNotesFilterInput {
+  id: ModelIDInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelNotesFilterInput]
+  or: [ModelNotesFilterInput]
+  not: ModelNotesFilterInput
+}
+
+input ModelNotesConditionInput {
+  and: [ModelNotesConditionInput]
+  or: [ModelNotesConditionInput]
+  not: ModelNotesConditionInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+}
+
+input CreateNotesInput {
+  id: ID
+}
+
+input UpdateNotesInput {
+  id: ID!
+}
+
+input DeleteNotesInput {
+  id: ID!
+}
+
+input ModelSubscriptionNotesFilterInput {
+  id: ModelSubscriptionIDInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionNotesFilterInput]
+  or: [ModelSubscriptionNotesFilterInput]
+}
+
+type ModelArtisanquoteConnection @aws_api_key @aws_iam {
+  items: [Artisanquote]!
+  nextToken: String
+}
+
+input ModelArtisanquoteFilterInput {
+  id: ModelIDInput
+  Amountquoted: ModelFloatInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelArtisanquoteFilterInput]
+  or: [ModelArtisanquoteFilterInput]
+  not: ModelArtisanquoteFilterInput
+}
+
+input ModelArtisanquoteConditionInput {
+  Amountquoted: ModelFloatInput
+  and: [ModelArtisanquoteConditionInput]
+  or: [ModelArtisanquoteConditionInput]
+  not: ModelArtisanquoteConditionInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+}
+
+input CreateArtisanquoteInput {
+  id: ID
+  Amountquoted: Float
+}
+
+input UpdateArtisanquoteInput {
+  id: ID!
+  Amountquoted: Float
+}
+
+input DeleteArtisanquoteInput {
+  id: ID!
+}
+
+input ModelSubscriptionArtisanquoteFilterInput {
+  id: ModelSubscriptionIDInput
+  Amountquoted: ModelSubscriptionFloatInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionArtisanquoteFilterInput]
+  or: [ModelSubscriptionArtisanquoteFilterInput]
+}
+
+type ModelContactConnection @aws_api_key @aws_iam {
+  items: [Contact]!
+  nextToken: String
+}
+
+input ModelContactFilterInput {
+  id: ModelIDInput
+  artisanID: ModelIDInput
+  Position: ModelStringInput
+  Firstname: ModelStringInput
+  Surname: ModelStringInput
+  mobile: ModelStringInput
+  isactive: ModelBooleanInput
+  email: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelContactFilterInput]
+  or: [ModelContactFilterInput]
+  not: ModelContactFilterInput
+}
+
+input ModelContactConditionInput {
+  artisanID: ModelIDInput
+  Position: ModelStringInput
+  Firstname: ModelStringInput
+  Surname: ModelStringInput
+  mobile: ModelStringInput
+  isactive: ModelBooleanInput
+  email: ModelStringInput
+  and: [ModelContactConditionInput]
+  or: [ModelContactConditionInput]
+  not: ModelContactConditionInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+}
+
+input CreateContactInput {
+  id: ID
+  artisanID: ID!
+  Position: String
+  Firstname: String
+  Surname: String
+  mobile: AWSPhone
+  isactive: Boolean
+  email: AWSEmail
+}
+
+input UpdateContactInput {
+  id: ID!
+  artisanID: ID
+  Position: String
+  Firstname: String
+  Surname: String
+  mobile: AWSPhone
+  isactive: Boolean
+  email: AWSEmail
+}
+
+input DeleteContactInput {
+  id: ID!
+}
+
+input ModelSubscriptionContactFilterInput {
+  id: ModelSubscriptionIDInput
+  artisanID: ModelSubscriptionIDInput
+  Position: ModelSubscriptionStringInput
+  Firstname: ModelSubscriptionStringInput
+  Surname: ModelSubscriptionStringInput
+  mobile: ModelSubscriptionStringInput
+  isactive: ModelSubscriptionBooleanInput
+  email: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionContactFilterInput]
+  or: [ModelSubscriptionContactFilterInput]
+}
+
+type ModelArtisanConnection @aws_api_key @aws_iam {
+  items: [Artisan]!
+  nextToken: String
+}
+
+input ModelArtisanFilterInput {
+  id: ModelIDInput
+  Companyname: ModelStringInput
+  Companyaddress: ModelStringInput
+  Companypostcode: ModelStringInput
+  isactive: ModelBooleanInput
+  phone: ModelStringInput
+  email: ModelStringInput
+  interestedinMale: ModelBooleanInput
+  interestedinfemale: ModelBooleanInput
+  interestedinallgender: ModelBooleanInput
+  interestedinrings: ModelBooleanInput
+  interestedinnecklaces: ModelBooleanInput
+  interestedinbraclets: ModelBooleanInput
+  interestedinearrings: ModelBooleanInput
+  interestedinchains: ModelBooleanInput
+  interestedincufflinks: ModelBooleanInput
+  interstedinaljewellrytypes: ModelBooleanInput
+  agreedtoterms: ModelBooleanInput
+  ipaddress: ModelStringInput
+  Country: ModelStringInput
+  Currency: ModelStringInput
+  agreedtimestamp: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelArtisanFilterInput]
+  or: [ModelArtisanFilterInput]
+  not: ModelArtisanFilterInput
+}
+
+input ModelArtisanConditionInput {
+  Companyname: ModelStringInput
+  Companyaddress: ModelStringInput
+  Companypostcode: ModelStringInput
+  isactive: ModelBooleanInput
+  phone: ModelStringInput
+  email: ModelStringInput
+  interestedinMale: ModelBooleanInput
+  interestedinfemale: ModelBooleanInput
+  interestedinallgender: ModelBooleanInput
+  interestedinrings: ModelBooleanInput
+  interestedinnecklaces: ModelBooleanInput
+  interestedinbraclets: ModelBooleanInput
+  interestedinearrings: ModelBooleanInput
+  interestedinchains: ModelBooleanInput
+  interestedincufflinks: ModelBooleanInput
+  interstedinaljewellrytypes: ModelBooleanInput
+  agreedtoterms: ModelBooleanInput
+  ipaddress: ModelStringInput
+  Country: ModelStringInput
+  Currency: ModelStringInput
+  agreedtimestamp: ModelStringInput
+  and: [ModelArtisanConditionInput]
+  or: [ModelArtisanConditionInput]
+  not: ModelArtisanConditionInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+}
+
+input CreateArtisanInput {
+  id: ID
+  Companyname: String
+  Companyaddress: String
+  Companypostcode: String
+  isactive: Boolean
+  phone: AWSPhone
+  email: AWSEmail
+  interestedinMale: Boolean
+  interestedinfemale: Boolean
+  interestedinallgender: Boolean
+  interestedinrings: Boolean
+  interestedinnecklaces: Boolean
+  interestedinbraclets: Boolean
+  interestedinearrings: Boolean
+  interestedinchains: Boolean
+  interestedincufflinks: Boolean
+  interstedinaljewellrytypes: Boolean
+  agreedtoterms: Boolean
+  ipaddress: AWSIPAddress
+  Country: String
+  Currency: String
+  agreedtimestamp: AWSDateTime
+}
+
+input UpdateArtisanInput {
+  id: ID!
+  Companyname: String
+  Companyaddress: String
+  Companypostcode: String
+  isactive: Boolean
+  phone: AWSPhone
+  email: AWSEmail
+  interestedinMale: Boolean
+  interestedinfemale: Boolean
+  interestedinallgender: Boolean
+  interestedinrings: Boolean
+  interestedinnecklaces: Boolean
+  interestedinbraclets: Boolean
+  interestedinearrings: Boolean
+  interestedinchains: Boolean
+  interestedincufflinks: Boolean
+  interstedinaljewellrytypes: Boolean
+  agreedtoterms: Boolean
+  ipaddress: AWSIPAddress
+  Country: String
+  Currency: String
+  agreedtimestamp: AWSDateTime
+}
+
+input DeleteArtisanInput {
+  id: ID!
+}
+
+input ModelSubscriptionArtisanFilterInput {
+  id: ModelSubscriptionIDInput
+  Companyname: ModelSubscriptionStringInput
+  Companyaddress: ModelSubscriptionStringInput
+  Companypostcode: ModelSubscriptionStringInput
+  isactive: ModelSubscriptionBooleanInput
+  phone: ModelSubscriptionStringInput
+  email: ModelSubscriptionStringInput
+  interestedinMale: ModelSubscriptionBooleanInput
+  interestedinfemale: ModelSubscriptionBooleanInput
+  interestedinallgender: ModelSubscriptionBooleanInput
+  interestedinrings: ModelSubscriptionBooleanInput
+  interestedinnecklaces: ModelSubscriptionBooleanInput
+  interestedinbraclets: ModelSubscriptionBooleanInput
+  interestedinearrings: ModelSubscriptionBooleanInput
+  interestedinchains: ModelSubscriptionBooleanInput
+  interestedincufflinks: ModelSubscriptionBooleanInput
+  interstedinaljewellrytypes: ModelSubscriptionBooleanInput
+  agreedtoterms: ModelSubscriptionBooleanInput
+  ipaddress: ModelSubscriptionStringInput
+  Country: ModelSubscriptionStringInput
+  Currency: ModelSubscriptionStringInput
+  agreedtimestamp: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionArtisanFilterInput]
+  or: [ModelSubscriptionArtisanFilterInput]
+}
+
+type ModelCreationsConnection @aws_api_key @aws_iam {
+  items: [Creations]!
+  nextToken: String
+}
+
+input ModelCreationsFilterInput {
+  id: ModelIDInput
+  prompt: ModelStringInput
+  costprompt: ModelStringInput
+  gender: ModelStringInput
+  jewellrytype: ModelStringInput
+  material: ModelStringInput
+  kwt: ModelStringInput
+  stone: ModelStringInput
+  grade: ModelStringInput
+  Gemsource: ModelStringInput
+  ringsize: ModelStringInput
+  Style: ModelStringInput
+  ringstyle: ModelStringInput
+  gemsize: ModelStringInput
+  cut: ModelStringInput
+  url: ModelStringInput
+  colour: ModelStringInput
+  shape: ModelStringInput
+  accepteddate: ModelStringInput
+  ipaddress: ModelStringInput
+  outstandingbalance: ModelFloatInput
+  requiredby: ModelStringInput
+  Estimatecostfrom: ModelFloatInput
+  Estimatecostto: ModelFloatInput
+  lastupdate: ModelStringInput
+  status: ModelStringInput
+  submittedforquote: ModelBooleanInput
+  submittedfororder: ModelBooleanInput
+  termsaccepted: ModelBooleanInput
+  amontquoted: ModelFloatInput
+  submitteddate: ModelStringInput
+  clarity: ModelStringInput
+  bandwidth: ModelStringInput
+  Prompt_Strength: ModelStringInput
+  Similarity_Strength: ModelStringInput
+  seedurl: ModelStringInput
+  Necklace_Length: ModelStringInput
+  Bracelet_Length: ModelStringInput
+  Secondary_Gemstone: ModelStringInput
+  Earring_Fastening_Types: ModelStringInput
+  Bracelet_Clasp_Types: ModelStringInput
+  Ring_Band_Style: ModelStringInput
+  Ring_Setting: ModelStringInput
+  Necklace_Chain_Style: ModelStringInput
+  Bracelet_Chain_Style: ModelStringInput
+  Brooch_Fastening_Types: ModelStringInput
+  Gem_Settings: ModelStringInput
+  Necklace_Clasp: ModelStringInput
+  clientID: ModelIDInput
+  shared: ModelBooleanInput
+  likes: ModelIntInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelCreationsFilterInput]
+  or: [ModelCreationsFilterInput]
+  not: ModelCreationsFilterInput
+}
+
+input ModelCreationsConditionInput {
+  prompt: ModelStringInput
+  costprompt: ModelStringInput
+  gender: ModelStringInput
+  jewellrytype: ModelStringInput
+  material: ModelStringInput
+  kwt: ModelStringInput
+  stone: ModelStringInput
+  grade: ModelStringInput
+  Gemsource: ModelStringInput
+  ringsize: ModelStringInput
+  Style: ModelStringInput
+  ringstyle: ModelStringInput
+  gemsize: ModelStringInput
+  cut: ModelStringInput
+  url: ModelStringInput
+  colour: ModelStringInput
+  shape: ModelStringInput
+  accepteddate: ModelStringInput
+  ipaddress: ModelStringInput
+  outstandingbalance: ModelFloatInput
+  requiredby: ModelStringInput
+  Estimatecostfrom: ModelFloatInput
+  Estimatecostto: ModelFloatInput
+  lastupdate: ModelStringInput
+  status: ModelStringInput
+  submittedforquote: ModelBooleanInput
+  submittedfororder: ModelBooleanInput
+  termsaccepted: ModelBooleanInput
+  amontquoted: ModelFloatInput
+  submitteddate: ModelStringInput
+  clarity: ModelStringInput
+  bandwidth: ModelStringInput
+  Prompt_Strength: ModelStringInput
+  Similarity_Strength: ModelStringInput
+  seedurl: ModelStringInput
+  Necklace_Length: ModelStringInput
+  Bracelet_Length: ModelStringInput
+  Secondary_Gemstone: ModelStringInput
+  Earring_Fastening_Types: ModelStringInput
+  Bracelet_Clasp_Types: ModelStringInput
+  Ring_Band_Style: ModelStringInput
+  Ring_Setting: ModelStringInput
+  Necklace_Chain_Style: ModelStringInput
+  Bracelet_Chain_Style: ModelStringInput
+  Brooch_Fastening_Types: ModelStringInput
+  Gem_Settings: ModelStringInput
+  Necklace_Clasp: ModelStringInput
+  clientID: ModelIDInput
+  shared: ModelBooleanInput
+  likes: ModelIntInput
+  and: [ModelCreationsConditionInput]
+  or: [ModelCreationsConditionInput]
+  not: ModelCreationsConditionInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+}
+
+input CreateCreationsInput {
+  id: ID
+  prompt: String
+  costprompt: String
+  gender: String
+  jewellrytype: String
+  material: String
+  kwt: String
+  stone: String
+  grade: String
+  Gemsource: String
+  ringsize: String
+  Style: String
+  ringstyle: String
+  gemsize: String
+  cut: String
+  url: AWSURL
+  colour: String
+  shape: String
+  accepteddate: AWSDate
+  ipaddress: AWSIPAddress
+  outstandingbalance: Float
+  requiredby: AWSDate
+  Estimatecostfrom: Float
+  Estimatecostto: Float
+  lastupdate: AWSDateTime
+  status: String
+  submittedforquote: Boolean
+  submittedfororder: Boolean
+  termsaccepted: Boolean
+  amontquoted: Float
+  submitteddate: AWSDate
+  clarity: String
+  bandwidth: String
+  Prompt_Strength: String
+  Similarity_Strength: String
+  seedurl: AWSURL
+  Necklace_Length: String
+  Bracelet_Length: String
+  Secondary_Gemstone: String
+  Earring_Fastening_Types: String
+  Bracelet_Clasp_Types: String
+  Ring_Band_Style: String
+  Ring_Setting: String
+  Necklace_Chain_Style: String
+  Bracelet_Chain_Style: String
+  Brooch_Fastening_Types: String
+  Gem_Settings: String
+  Necklace_Clasp: String
+  clientID: ID!
+  shared: Boolean
+  likes: Int
+}
+
+input UpdateCreationsInput {
+  id: ID!
+  prompt: String
+  costprompt: String
+  gender: String
+  jewellrytype: String
+  material: String
+  kwt: String
+  stone: String
+  grade: String
+  Gemsource: String
+  ringsize: String
+  Style: String
+  ringstyle: String
+  gemsize: String
+  cut: String
+  url: AWSURL
+  colour: String
+  shape: String
+  accepteddate: AWSDate
+  ipaddress: AWSIPAddress
+  outstandingbalance: Float
+  requiredby: AWSDate
+  Estimatecostfrom: Float
+  Estimatecostto: Float
+  lastupdate: AWSDateTime
+  status: String
+  submittedforquote: Boolean
+  submittedfororder: Boolean
+  termsaccepted: Boolean
+  amontquoted: Float
+  submitteddate: AWSDate
+  clarity: String
+  bandwidth: String
+  Prompt_Strength: String
+  Similarity_Strength: String
+  seedurl: AWSURL
+  Necklace_Length: String
+  Bracelet_Length: String
+  Secondary_Gemstone: String
+  Earring_Fastening_Types: String
+  Bracelet_Clasp_Types: String
+  Ring_Band_Style: String
+  Ring_Setting: String
+  Necklace_Chain_Style: String
+  Bracelet_Chain_Style: String
+  Brooch_Fastening_Types: String
+  Gem_Settings: String
+  Necklace_Clasp: String
+  clientID: ID
+  shared: Boolean
+  likes: Int
+}
+
+input DeleteCreationsInput {
+  id: ID!
+}
+
+input ModelSubscriptionCreationsFilterInput {
+  id: ModelSubscriptionIDInput
+  prompt: ModelSubscriptionStringInput
+  costprompt: ModelSubscriptionStringInput
+  gender: ModelSubscriptionStringInput
+  jewellrytype: ModelSubscriptionStringInput
+  material: ModelSubscriptionStringInput
+  kwt: ModelSubscriptionStringInput
+  stone: ModelSubscriptionStringInput
+  grade: ModelSubscriptionStringInput
+  Gemsource: ModelSubscriptionStringInput
+  ringsize: ModelSubscriptionStringInput
+  Style: ModelSubscriptionStringInput
+  ringstyle: ModelSubscriptionStringInput
+  gemsize: ModelSubscriptionStringInput
+  cut: ModelSubscriptionStringInput
+  url: ModelSubscriptionStringInput
+  colour: ModelSubscriptionStringInput
+  shape: ModelSubscriptionStringInput
+  accepteddate: ModelSubscriptionStringInput
+  ipaddress: ModelSubscriptionStringInput
+  outstandingbalance: ModelSubscriptionFloatInput
+  requiredby: ModelSubscriptionStringInput
+  Estimatecostfrom: ModelSubscriptionFloatInput
+  Estimatecostto: ModelSubscriptionFloatInput
+  lastupdate: ModelSubscriptionStringInput
+  status: ModelSubscriptionStringInput
+  submittedforquote: ModelSubscriptionBooleanInput
+  submittedfororder: ModelSubscriptionBooleanInput
+  termsaccepted: ModelSubscriptionBooleanInput
+  amontquoted: ModelSubscriptionFloatInput
+  submitteddate: ModelSubscriptionStringInput
+  clarity: ModelSubscriptionStringInput
+  bandwidth: ModelSubscriptionStringInput
+  Prompt_Strength: ModelSubscriptionStringInput
+  Similarity_Strength: ModelSubscriptionStringInput
+  seedurl: ModelSubscriptionStringInput
+  Necklace_Length: ModelSubscriptionStringInput
+  Bracelet_Length: ModelSubscriptionStringInput
+  Secondary_Gemstone: ModelSubscriptionStringInput
+  Earring_Fastening_Types: ModelSubscriptionStringInput
+  Bracelet_Clasp_Types: ModelSubscriptionStringInput
+  Ring_Band_Style: ModelSubscriptionStringInput
+  Ring_Setting: ModelSubscriptionStringInput
+  Necklace_Chain_Style: ModelSubscriptionStringInput
+  Bracelet_Chain_Style: ModelSubscriptionStringInput
+  Brooch_Fastening_Types: ModelSubscriptionStringInput
+  Gem_Settings: ModelSubscriptionStringInput
+  Necklace_Clasp: ModelSubscriptionStringInput
+  clientID: ModelSubscriptionIDInput
+  shared: ModelSubscriptionBooleanInput
+  likes: ModelSubscriptionIntInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionCreationsFilterInput]
+  or: [ModelSubscriptionCreationsFilterInput]
+}
+
+type ModelClientConnection @aws_api_key @aws_iam {
+  items: [Client]!
+  nextToken: String
+}
+
+input ModelClientFilterInput {
+  id: ModelIDInput
+  firstName: ModelStringInput
+  lastName: ModelStringInput
+  email: ModelStringInput
+  mobile: ModelStringInput
+  birthdate: ModelStringInput
+  isactive: ModelBooleanInput
+  Address1: ModelStringInput
+  Address2: ModelStringInput
+  City: ModelStringInput
+  Postcode: ModelStringInput
+  Housenumber: ModelStringInput
+  updatedAt: ModelStringInput
+  createdAt: ModelStringInput
+  credits: ModelIntInput
+  ipAddress: ModelStringInput
+  Subscribed: ModelBooleanInput
+  Role: ModelStringInput
+  Country: ModelStringInput
+  Currency: ModelStringInput
+  IsArtisan: ModelBooleanInput
+  Paywall: ModelIntInput
+  and: [ModelClientFilterInput]
+  or: [ModelClientFilterInput]
+  not: ModelClientFilterInput
+}
+
+input ModelClientConditionInput {
+  firstName: ModelStringInput
+  lastName: ModelStringInput
+  email: ModelStringInput
+  mobile: ModelStringInput
+  birthdate: ModelStringInput
+  isactive: ModelBooleanInput
+  Address1: ModelStringInput
+  Address2: ModelStringInput
+  City: ModelStringInput
+  Postcode: ModelStringInput
+  Housenumber: ModelStringInput
+  updatedAt: ModelStringInput
+  createdAt: ModelStringInput
+  credits: ModelIntInput
+  ipAddress: ModelStringInput
+  Subscribed: ModelBooleanInput
+  Role: ModelStringInput
+  Country: ModelStringInput
+  Currency: ModelStringInput
+  IsArtisan: ModelBooleanInput
+  Paywall: ModelIntInput
+  and: [ModelClientConditionInput]
+  or: [ModelClientConditionInput]
+  not: ModelClientConditionInput
+}
+
+input CreateClientInput {
+  id: ID
+  firstName: String
+  lastName: String
+  email: AWSEmail
+  mobile: AWSPhone
+  birthdate: AWSDate
+  isactive: Boolean
+  Address1: String
+  Address2: String
+  City: String
+  Postcode: String
+  Housenumber: String
+  updatedAt: AWSDateTime
+  createdAt: AWSDateTime
+  credits: Int
+  ipAddress: AWSIPAddress
+  Subscribed: Boolean
+  Role: String
+  Country: String
+  Currency: String
+  IsArtisan: Boolean
+  Paywall: Int
+}
+
+input UpdateClientInput {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: AWSEmail
+  mobile: AWSPhone
+  birthdate: AWSDate
+  isactive: Boolean
+  Address1: String
+  Address2: String
+  City: String
+  Postcode: String
+  Housenumber: String
+  updatedAt: AWSDateTime
+  createdAt: AWSDateTime
+  credits: Int
+  ipAddress: AWSIPAddress
+  Subscribed: Boolean
+  Role: String
+  Country: String
+  Currency: String
+  IsArtisan: Boolean
+  Paywall: Int
+}
+
+input DeleteClientInput {
+  id: ID!
+}
+
+input ModelSubscriptionClientFilterInput {
+  id: ModelSubscriptionIDInput
+  firstName: ModelSubscriptionStringInput
+  lastName: ModelSubscriptionStringInput
+  email: ModelSubscriptionStringInput
+  mobile: ModelSubscriptionStringInput
+  birthdate: ModelSubscriptionStringInput
+  isactive: ModelSubscriptionBooleanInput
+  Address1: ModelSubscriptionStringInput
+  Address2: ModelSubscriptionStringInput
+  City: ModelSubscriptionStringInput
+  Postcode: ModelSubscriptionStringInput
+  Housenumber: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  credits: ModelSubscriptionIntInput
+  ipAddress: ModelSubscriptionStringInput
+  Subscribed: ModelSubscriptionBooleanInput
+  Role: ModelSubscriptionStringInput
+  Country: ModelSubscriptionStringInput
+  Currency: ModelSubscriptionStringInput
+  IsArtisan: ModelSubscriptionBooleanInput
+  Paywall: ModelSubscriptionIntInput
+  and: [ModelSubscriptionClientFilterInput]
+  or: [ModelSubscriptionClientFilterInput]
+}

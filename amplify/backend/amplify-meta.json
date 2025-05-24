@@ -1,0 +1,108 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bespoke-jewel-97685-authRole",
+      "UnauthRoleArn": "arn:aws:iam::891376932758:role/amplify-bespoke-jewel-97685-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::891376932758:role/amplify-bespoke-jewel-97685-authRole",
+      "Region": "eu-west-2",
+      "DeploymentBucketName": "amplify-bespoke-jewel-97685-deployment",
+      "UnauthRoleName": "amplify-bespoke-jewel-97685-unauthRole",
+      "StackName": "amplify-bespoke-jewel-97685",
+      "StackId": "arn:aws:cloudformation:eu-west-2:891376932758:stack/amplify-bespoke-jewel-97685/d3d83df0-88bf-11ef-b8d2-0aef3511c67d",
+      "AmplifyAppId": "d3vvydqrffh0pb"
+    }
+  },
+  "api": {
+    "bespoke2": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ],
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 30,
+              "description": "api key description"
+            }
+          }
+        },
+        "GraphQLAPIIdOutput": "k4l7j24k3bhnpcgivn7igvl42i",
+        "GraphQLAPIEndpointOutput": "https://2mg3qsmfazdqbfymmpe5cotxtm.appsync-api.eu-west-2.amazonaws.com/graphql",
+        "GraphQLAPIKeyOutput": "da2-n6vgcjxbanevnd7jyqcmf25grm"
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync",
+      "lastPushTimeStamp": "2025-03-05T22:10:36.392Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bespoke-jewel-97685-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apibespoke2"
+      },
+      "lastPushDirHash": "BHoX8fqG54EeNDwlbfBpaAl8T00="
+    }
+  },
+  "auth": {
+    "bespoke": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "signupAttributes": [
+          "BIRTHDATE",
+          "EMAIL",
+          "FAMILY_NAME",
+          "GIVEN_NAME",
+          "PHONE_NUMBER"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "output": {
+        "CreatedSNSRole": "arn:aws:iam::891376932758:role/snse1b6af8097685-jewel",
+        "UserPoolId": "eu-west-2_QKp8bxrip",
+        "AppClientIDWeb": "7pqc3fqhei9bvhoej7919ltmbo",
+        "AppClientID": "gur8v7tkrg8j8g7pa2iiir0p8",
+        "IdentityPoolId": "eu-west-2:3c4e666f-2dbb-4a94-bf17-bc9f092734c4",
+        "UserPoolArn": "arn:aws:cognito-idp:eu-west-2:891376932758:userpool/eu-west-2_QKp8bxrip",
+        "IdentityPoolName": "testAuthIdentityPool__jewel",
+        "UserPoolName": "bespoke"
+      },
+      "lastPushTimeStamp": "2025-03-05T22:10:37.841Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-bespoke-jewel-97685-deployment/amplify-cfn-templates/auth/bespoke-cloudformation-template.json",
+        "logicalId": "authbespoke"
+      },
+      "lastPushDirHash": "gHI+96ANbhNjEO/O17PK8wfn3yE="
+    }
+  },
+  "storage": {
+    "bespoked2992eb2": {
+      "service": "S3",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "output": {
+        "BucketName": "elegencejewllery-storage-63fc7a6c0e9b8-devjewll",
+        "Region": "eu-west-2"
+      },
+      "lastPushTimeStamp": "2024-10-14T15:04:21.240Z"
+    }
+  }
+}

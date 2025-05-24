@@ -1,0 +1,13 @@
+{
+    "AppSyncApiName": "bespoke2",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "S3DeploymentBucket": "amplify-bespoke-jewel-97685-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/54b7b2951ddb7d3dd2ca998057068471b7f94816"
+}
