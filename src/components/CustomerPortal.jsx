@@ -18,7 +18,8 @@ import { useUserData } from './UserContext';
 import './CustomerPortal.css';
 
 // Replace with your actual Stripe publishable key
-const stripePromise = loadStripe('your_publishable_key');
+const stripePromise = loadStripe('pk_test_51NimIrCGTRmYtOxofBHJVgHgTN9skZFONdlpzYClH15iqN4fVbbanVwCrVbi2nNmpIw0U3Uctwg3JBE4CwC8NUkK00Gqr6XGUF');
+console.log('Stripe initialized with key:', stripePromise);
 
 // CustomerPortal component now accepts 'user' and 'signOut' props
 export default function CustomerPortal({ signOut, user }) {

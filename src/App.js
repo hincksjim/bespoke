@@ -13,6 +13,7 @@ import Terms from "./components/Terms"
 import Privacy from "./components/Privacy"
 import PaymentPage from "./components/PaymentPage"
 import SecondaryLoginPage from "./components/SecondaryLoginPage"
+import PaymentSuccessPage from "./components/PaymentSuccessPage"
 import AuthCallback from "./components/AuthCallback"
 import ArtisanAuthCallback from "./components/ArtisanAuthCallback"
 import ArtisanConsole from "./components/artisan-console"
@@ -266,6 +267,7 @@ const AppRoutes = () => {
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route path="/auth/artisan-callback" element={<ArtisanAuthCallback />} />
             <Route path="/artisan-login" element={<SecondaryLoginPage />} />
+            <Route path="/payment-success" element={<PaymentSuccessPage />} />
 
             {/* --- Protected Routes --- */}
             <Route

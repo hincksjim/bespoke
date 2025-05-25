@@ -1,8 +1,8 @@
-// Updated PaymentPage.js with better error handling for 502 errors
+// Fixed PaymentPage.js with proper postal code handling
 
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js"
 import { fetchAuthSession } from "aws-amplify/auth"
 import { generateClient } from "aws-amplify/api"
@@ -22,12 +22,29 @@ const PaymentStatus = {
   FAILED: "FAILED"
 }
 
+// GraphQL query to get client data - moved outside the component
+const getClientQuery = `
+  query GetClient($id: ID!) {
+    getClient(id: $id) {
+      id
+      firstName
+      lastName
+      email
+      credits
+    }
+  }
+`
+
 const PaymentPage = () => {
   const stripe = useStripe()
   const elements = useElements()
+  const navigate = useNavigate()
   
   // Enhanced logging for Stripe initialization
   console.log("Stripe instance loaded:", !!stripe);
+  console.log("Stripe Elements loaded:", !!elements);
+  console.log("Stripe publishable key:", stripe|| "Not set");
+
   console.log("Stripe publishable key check:", 
     process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ? 
     "Environment variable present with length: " + process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY.length : 
@@ -39,10 +56,10 @@ const PaymentPage = () => {
   const [userData, setUserData] = useState(null)
   const [retryCount, setRetryCount] = useState(0)
   const [debugInfo, setDebugInfo] = useState(null)
-  const navigate = useNavigate()
+  const [postalCode, setPostalCode] = useState("") // Add separate postal code state
 
   // Try to get user data from context hook
-  const { userData: contextUserData } = useUserData()
+  const { userData: contextUserData } = useUserData() || { userData: null }
 
   const plans = [
     { name: "Basic", credits: 50, price: 1000 },
@@ -50,12 +67,8 @@ const PaymentPage = () => {
     { name: "Premium", credits: 265, price: 4000 },
   ]
 
-  useEffect(() => {
-    getUserData()
-  }, [])
-
-  // Get user data from multiple sources
-  const getUserData = async () => {
+  // Get user data from multiple sources - wrapped in useCallback to prevent infinite re-renders
+  const getUserData = useCallback(async () => {
     try {
       const userPoolType = localStorage.getItem("userPoolType")
       console.log("Getting user data. Pool type:", userPoolType)
@@ -110,11 +123,13 @@ const PaymentPage = () => {
         console.log("Found user data in context:", contextUserData)
         const contextData = contextUserData
 
-        if (contextData.fields) {
+        if (contextData.fields && Array.isArray(contextData.fields)) {
           // Extract data from fields array
           const fieldsMap = {}
           contextData.fields.forEach((field) => {
-            fieldsMap[field.key] = field.value
+            if (field && field.key && field.value !== undefined) {
+              fieldsMap[field.key] = field.value
+            }
           })
 
           if (fieldsMap.firstName) firstName = fieldsMap.firstName
@@ -179,7 +194,7 @@ const PaymentPage = () => {
       })
       setErrorMessage("Unable to fetch your profile data. You can still make a purchase.")
     }
-  }
+  }, [contextUserData]) // Add contextUserData as dependency
 
   // Function to check the API status
   const checkApiStatus = async () => {
@@ -204,6 +219,35 @@ const PaymentPage = () => {
     }
   };
 
+  // Handle retry after 502 error
+  const handleRetry = async () => {
+    // Only allow a few retries
+    if (retryCount >= 3) {
+      setErrorMessage("Maximum retry attempts reached. Please try again later or contact support.");
+      return;
+    }
+    
+    setRetryCount(prev => prev + 1);
+    
+    // Check API health before retrying
+    const apiStatus = await checkApiStatus();
+    setDebugInfo(prevDebugInfo => ({ 
+      ...prevDebugInfo, 
+      apiHealthCheck: apiStatus,
+      retryAttempt: retryCount + 1
+    }));
+    
+    // If the API health check fails, update the error message
+    if (apiStatus.status === "ERROR") {
+      setErrorMessage(`API appears to be unavailable (${apiStatus.code || 'Unknown error'}). Please try again later.`);
+      return;
+    }
+    
+    // Try the payment again
+    const retryEvent = { preventDefault: () => {} };
+    handleSubmit(retryEvent);
+  };
+
   // Render different status messages based on payment status
   const renderStatusMessage = () => {
     switch (paymentStatus) {
@@ -218,7 +262,7 @@ const PaymentPage = () => {
         return (
           <div className="status-message success">
             <CheckCircle className="mr-2" size={24} color="green" />
-            Payment Successful! {selectedPlan.credits} credits have been added to your account.
+            Payment Successful! {selectedPlan?.credits || 0} credits have been added to your account.
           </div>
         )
       case PaymentStatus.FAILED:
@@ -231,7 +275,8 @@ const PaymentPage = () => {
             {errorMessage.includes("502") && (
               <button 
                 className="retry-button"
-                onClick={() => handleRetry()}
+                onClick={handleRetry}
+                type="button"
               >
                 Retry Payment
               </button>
@@ -253,36 +298,10 @@ const PaymentPage = () => {
     }
   }
 
-  // Handle retry after 502 error
-  const handleRetry = async () => {
-    // Only allow a few retries
-    if (retryCount >= 3) {
-      setErrorMessage("Maximum retry attempts reached. Please try again later or contact support.");
-      return;
-    }
-    
-    setRetryCount(prev => prev + 1);
-    
-    // Check API health before retrying
-    const apiStatus = await checkApiStatus();
-    setDebugInfo({ 
-      ...debugInfo, 
-      apiHealthCheck: apiStatus,
-      retryAttempt: retryCount + 1
-    });
-    
-    // If the API health check fails, update the error message
-    if (apiStatus.status === "ERROR") {
-      setErrorMessage(`API appears to be unavailable (${apiStatus.code || 'Unknown error'}). Please try again later.`);
-      return;
-    }
-    
-    // Try the payment again
-    handleSubmit(new Event('retry'));
-  };
-
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    if (event && event.preventDefault) {
+      event.preventDefault();
+    }
     
     setErrorMessage("");
     setPaymentStatus(PaymentStatus.PROCESSING);
@@ -350,7 +369,7 @@ const PaymentPage = () => {
           credentials: "include",
           body: JSON.stringify({
             amount: selectedPlan.price,
-            currency: "gbp",
+            currency: "GBP",
             userId: userData?.id || "unknown",
           }),
         });
@@ -403,75 +422,265 @@ const PaymentPage = () => {
         throw new Error(errorData.error || `Failed to create payment intent: ${paymentResponse.status}`);
       }
 
-      const { clientSecret, paymentIntentId } = await paymentResponse.json();
-      console.log("paymentStatus:", paymentStatus);  
-      console.log("paymentResponse:", paymentResponse);    
-      console.log("clientSecret:", clientSecret ? "Received" : "Missing");
+      const paymentResponseData = await paymentResponse.json();
+      console.log("=== PAYMENT INTENT CREATION RESPONSE ===");
+      console.log("Full payment response data:", JSON.stringify(paymentResponseData, null, 2));
+      console.log("Response keys:", Object.keys(paymentResponseData));
+      
+      const { clientSecret, paymentIntentId } = paymentResponseData;
+      
+      // Detailed validation of payment intent response
+      console.log("=== PAYMENT INTENT VALIDATION ===");
+      console.log("clientSecret exists:", !!clientSecret);
+      console.log("clientSecret type:", typeof clientSecret);
+      console.log("clientSecret length:", clientSecret ? clientSecret.length : 'N/A');
+      console.log("clientSecret starts with 'pi_':", clientSecret ? clientSecret.startsWith('pi_') : false);
       console.log("paymentIntentId:", paymentIntentId);
+      console.log("paymentIntentId type:", typeof paymentIntentId);
+      
+      // Log other important data
+      console.log("=== CONTEXT DATA ===");
+      console.log("paymentStatus:", paymentStatus);  
+      console.log("selectedPlan:", JSON.stringify(selectedPlan, null, 2));
+      console.log("userData:", JSON.stringify(userData, null, 2));
+      console.log("authHeaders:", JSON.stringify(authHeaders, null, 2));
+      console.log("stripe instance:", !!stripe);
+      console.log("cardElement:", !!cardElement); 
 
       // Make sure we have a valid client secret before proceeding
       if (!clientSecret) {
+        console.error("=== CLIENT SECRET VALIDATION FAILED ===");
+        console.error("clientSecret is falsy:", !clientSecret);
+        console.error("Full response was:", JSON.stringify(paymentResponseData, null, 2));
         throw new Error("Did not receive a valid client secret from the server");
       }
 
-      // Confirm the card payment with Stripe
-      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      // Validate client secret format
+      if (typeof clientSecret !== 'string') {
+        console.error("=== CLIENT SECRET TYPE ERROR ===");
+        console.error("Expected string, got:", typeof clientSecret);
+        console.error("Value:", clientSecret);
+        throw new Error(`Client secret must be a string, received: ${typeof clientSecret}`);
+      }
+
+      if (!clientSecret.startsWith('pi_')) {
+        console.error("=== CLIENT SECRET FORMAT ERROR ===");
+        console.error("Client secret should start with 'pi_', got:", clientSecret.substring(0, 10) + "...");
+        throw new Error("Client secret format appears invalid");
+      }
+
+      // IMPORTANT: Using clientSecret (NOT publishable key) for payment confirmation
+      console.log("=== STRIPE PAYMENT CONFIRMATION ===");
+      console.log("About to confirm payment with clientSecret:", clientSecret.substring(0, 20) + "...");
+      console.log("Stripe instance ready:", !!stripe);
+      console.log("CardElement ready:", !!cardElement);
+      
+      // Log billing details that will be sent
+      const billingDetails = {
+        name: `${userData?.firstName || "User"} ${userData?.lastName || ""}`.trim(),
+        email: userData?.email || "",
+        address: {
+          postal_code: postalCode || undefined, // Use our separate postal code field
+        },
+      };
+      console.log("Billing details:", JSON.stringify(billingDetails, null, 2));
+      
+      // Confirm the card payment with Stripe - Using clientSecret correctly
+      console.log("Calling stripe.confirmCardPayment...");
+      const stripeResult = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: cardElement,
-          billing_details: {
-            name: `${userData?.firstName || "User"} ${userData?.lastName || ""}`.trim(),
-            email: userData?.email || "",
-          },
+          billing_details: billingDetails,
         },
+        return_url: window.location.origin + '/payment-success', // Add return URL
       });
+      
+      console.log("=== STRIPE CONFIRMATION RESULT ===");
+      console.log("Stripe result keys:", Object.keys(stripeResult));
+      console.log("Error exists:", !!stripeResult.error);
+      console.log("PaymentIntent exists:", !!stripeResult.paymentIntent);
+      
+      if (stripeResult.error) {
+        console.log("Stripe error details:", JSON.stringify(stripeResult.error, null, 2));
+      }
+      
+      if (stripeResult.paymentIntent) {
+        console.log("PaymentIntent status:", stripeResult.paymentIntent.status);
+        console.log("PaymentIntent ID:", stripeResult.paymentIntent.id);
+        console.log("PaymentIntent amount:", stripeResult.paymentIntent.amount);
+        console.log("PaymentIntent currency:", stripeResult.paymentIntent.currency);
+        console.log("Payment method details:", stripeResult.paymentIntent.payment_method ? "Present" : "Missing");
+      }
+
+      const { error, paymentIntent } = stripeResult;
 
       if (error) {
-        console.error("Stripe payment error:", error);
-        setErrorMessage(error.message);
+        console.error("=== STRIPE PAYMENT ERROR ===");
+        console.error("Error type:", error.type);
+        console.error("Error code:", error.code);
+        console.error("Error message:", error.message);
+        console.error("Error decline code:", error.decline_code);
+        console.error("Full error object:", JSON.stringify(error, null, 2));
+        
+        // Handle different types of Stripe errors
+        let errorMsg = error.message;
+        if (error.type === 'card_error' || error.type === 'validation_error') {
+          errorMsg = error.message;
+        } else {
+          errorMsg = 'An unexpected error occurred. Please try again.';
+        }
+        
+        setErrorMessage(errorMsg);
         setPaymentStatus(PaymentStatus.FAILED);
         return;
       }
 
+      // Check payment intent status more thoroughly
+      console.log("=== PAYMENT INTENT STATUS CHECK ===");
+      console.log("PaymentIntent object:", !!paymentIntent);
+      
+      if (!paymentIntent) {
+        console.error("PaymentIntent is null or undefined");
+        setErrorMessage("Payment processing failed - no payment intent returned. Please try again.");
+        setPaymentStatus(PaymentStatus.FAILED);
+        return;
+      }
+      
+      console.log("PaymentIntent status:", paymentIntent.status);
+      console.log("PaymentIntent ID:", paymentIntent.id);
+      console.log("PaymentIntent amount received:", paymentIntent.amount_received);
+      console.log("PaymentIntent amount:", paymentIntent.amount);
+      
       if (paymentIntent.status === "succeeded") {
+        console.log("=== PAYMENT SUCCEEDED - PROCESSING CREDITS ===");
+        
+        // Get the last 4 digits of the card for success page
+        console.log("Payment method object:", paymentIntent.payment_method ? "Present" : "Missing");
+        console.log("Card details:", paymentIntent.payment_method?.card ? "Present" : "Missing");
+        
+        const cardLast4 = paymentIntent.payment_method?.card?.last4 || "****";
+        const cardBrand = paymentIntent.payment_method?.card?.brand || "card";
+        
+        console.log("Card last 4:", cardLast4);
+        console.log("Card brand:", cardBrand);
+        
         // Update user credits after successful payment
-        const updateResponse = await fetch(`${API_ENDPOINT}/update-credits`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...authHeaders,  // Use the same auth headers here
-          },
-          credentials: "include",
-          body: JSON.stringify({
+        try {
+          console.log("=== UPDATING CREDITS ===");
+          console.log("About to call update-credits endpoint");
+          console.log("User ID:", userData?.id);
+          console.log("Credits to add:", selectedPlan.credits);
+          console.log("Payment Intent ID:", paymentIntent.id);
+          
+          const updatePayload = {
             userId: userData?.id || "unknown",
             credits: selectedPlan.credits,
-            paymentIntentId: paymentIntentId,  // Make sure this is included
-          }),
-        });
+            paymentIntentId: paymentIntent.id,
+            amount: selectedPlan.price,
+            planName: selectedPlan.name,
+          };
+          
+          console.log("Update payload:", JSON.stringify(updatePayload, null, 2));
+          
+          const updateResponse = await fetch(`${API_ENDPOINT}/update-credits`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...authHeaders,
+            },
+            credentials: "include",
+            body: JSON.stringify(updatePayload),
+          });
 
-        if (!updateResponse.ok) {
-          const errorDetails = await updateResponse.json().catch(() => ({}));
-          setErrorMessage(`Payment succeeded but failed to update credits: ${errorDetails.error || "Unknown error"}`);
-          setPaymentStatus(PaymentStatus.FAILED);
-        } else {
+          console.log("Update response status:", updateResponse.status);
+          console.log("Update response ok:", updateResponse.ok);
+
+          if (!updateResponse.ok) {
+            const errorDetails = await updateResponse.json().catch(() => ({}));
+            console.error("=== CREDITS UPDATE FAILED ===");
+            console.error("Status:", updateResponse.status);
+            console.error("Error details:", JSON.stringify(errorDetails, null, 2));
+            setErrorMessage(`Payment succeeded but failed to update credits: ${errorDetails.error || "Unknown error"}. Please contact support.`);
+            setPaymentStatus(PaymentStatus.FAILED);
+            return;
+          }
+
           const updateData = await updateResponse.json();
+          console.log("=== CREDITS UPDATE SUCCESSFUL ===");
+          console.log("Update response data:", JSON.stringify(updateData, null, 2));
+          
+          // Update local user data safely
           setUserData(prev => ({
             ...prev,
-            credits: updateData.newCredits || (prev.credits + selectedPlan.credits),
+            credits: updateData.newCredits || ((prev?.credits || 0) + selectedPlan.credits),
           }));
+          
           setPaymentStatus(PaymentStatus.SUCCESS);
-          setTimeout(() => navigate("/design"), 2000);
+          
+          // Navigate to success page with payment details after a short delay
+          console.log("=== PREPARING SUCCESS NAVIGATION ===");
+          setTimeout(() => {
+            const successData = {
+              orderId: paymentIntent.id,
+              amount: selectedPlan.price / 100, // Convert from pence to pounds
+              currency: 'GBP',
+              product: `${selectedPlan.name} Plan - ${selectedPlan.credits} Credits`,
+              email: userData?.email || 'N/A',
+              paymentMethod: `${cardBrand.toUpperCase()} •••• ${cardLast4}`,
+              date: new Date().toISOString(),
+              creditsAdded: selectedPlan.credits,
+              planName: selectedPlan.name,
+              newCreditsTotal: updateData.newCredits || ((userData?.credits || 0) + selectedPlan.credits)
+            };
+            
+            console.log("Success data for navigation:", JSON.stringify(successData, null, 2));
+            
+            // Navigate with state containing payment success data
+            navigate('/payment-success', { 
+              state: { paymentData: successData },
+              replace: true 
+            });
+          }, 2000);
+          
+        } catch (creditsError) {
+          console.error("=== CREDITS UPDATE EXCEPTION ===");
+          console.error("Error:", creditsError);
+          console.error("Error message:", creditsError.message);
+          console.error("Error stack:", creditsError.stack);
+          setErrorMessage("Payment succeeded but failed to update credits. Please contact support with your payment confirmation.");
+          setPaymentStatus(PaymentStatus.FAILED);
         }
+      } else if (paymentIntent.status === "requires_action") {
+        // Handle 3D Secure or other authentication
+        console.log("=== PAYMENT REQUIRES ACTION ===");
+        console.log("PaymentIntent requires additional authentication");
+        console.log("Next action:", paymentIntent.next_action);
+        setErrorMessage("Payment requires additional authentication. Please follow the prompts from your bank.");
+        setPaymentStatus(PaymentStatus.FAILED);
       } else {
         // Payment intent returned but not succeeded
-        setErrorMessage(`Payment processing failed. Status: ${paymentIntent.status}`);
+        const status = paymentIntent?.status || "unknown";
+        console.log("=== PAYMENT NOT SUCCESSFUL ===");
+        console.log("Payment not successful, status:", status);
+        console.log("Full paymentIntent for debugging:", JSON.stringify(paymentIntent, null, 2));
+        setErrorMessage(`Payment processing failed. Status: ${status}. Please try again.`);
         setPaymentStatus(PaymentStatus.FAILED);
       }
     } catch (err) {
-      console.error("Payment exception:", err);
+      console.error("=== PAYMENT EXCEPTION ===");
+      console.error("Exception type:", err.constructor.name);
+      console.error("Exception message:", err.message);
+      console.error("Full exception:", err);
+      console.error("Stack trace:", err.stack);
       setErrorMessage(err.message || "Something went wrong. Please try again.");
       setPaymentStatus(PaymentStatus.FAILED);
     }
   };
+
+  // useEffect to initialize user data
+  useEffect(() => {
+    getUserData()
+  }, [getUserData])
 
   return (
     <div className="design-tool payment-page">
@@ -491,6 +700,7 @@ const PaymentPage = () => {
                   className={`option-button ${selectedPlan === plan ? "selected" : ""}`}
                   onClick={() => setSelectedPlan(plan)}
                   disabled={paymentStatus === PaymentStatus.PROCESSING}
+                  type="button"
                 >
                   <h3>{plan.name}</h3>
                   <p>
@@ -516,9 +726,25 @@ const PaymentPage = () => {
                       color: "#9e2146",
                     },
                   },
+                  hidePostalCode: true, // Hide the built-in postal code field
                 }}
               />
             </div>
+            
+            {/* Add separate postal code input field */}
+            <div className="postal-code-container">
+              <label htmlFor="postal-code">Postal Code</label>
+              <input
+                id="postal-code"
+                type="text"
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value.toUpperCase())}
+                placeholder="Enter your postal code (e.g., SW1A 1AA)"
+                className="postal-code-input"
+                disabled={paymentStatus === PaymentStatus.PROCESSING}
+              />
+            </div>
+            
             <button 
               type="submit" 
               className="submit-button" 
@@ -545,6 +771,7 @@ const PaymentPage = () => {
           <div className="test-card-info">
             <p><strong>Test Card:</strong> 4242 4242 4242 4242</p>
             <p>Use any future expiration date and any 3 digits for CVC</p>
+            <p><strong>Test Postal Code:</strong> Any UK postcode (e.g., SW1A 1AA)</p>
           </div>
         </div>
       </div>
@@ -552,17 +779,4 @@ const PaymentPage = () => {
   )
 }
 
-// GraphQL query to get client data - moved outside the function
-const getClientQuery = `
-  query GetClient($id: ID!) {
-    getClient(id: $id) {
-      id
-      firstName
-      lastName
-      email
-      credits
-    }
-  }
-`;
-
-export default PaymentPage;
+export default PaymentPage
