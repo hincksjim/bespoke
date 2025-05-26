@@ -1,30 +1,26 @@
-import { useState, useEffect } from 'react';
-import { CheckCircle, Download, Mail, ArrowLeft, Copy, Check } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { CheckCircle, Download, Mail, ArrowLeft, Copy, Check, AlertTriangle } from 'lucide-react';
+import './payment.css';
 
 export default function PaymentSuccessPage() {
   const [copied, setCopied] = useState(false);
   const [animate, setAnimate] = useState(false);
-
-  // Mock payment data - in real app, this would come from URL params or API
-  const paymentData = {
-    orderId: 'ORD-2024-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
-    amount: 49.99,
-    currency: 'USD',
-    product: 'Premium Subscription',
-    email: 'customer@example.com',
-    paymentMethod: '•••• 4242',
-    date: new Date().toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  };
-
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  const paymentData = location.state?.paymentData;
+  
   useEffect(() => {
+    if (!paymentData) {
+      navigate('/payment', { replace: true });
+      return;
+    }
+    // Debug logging
+    console.log("Payment Data received:", paymentData);
+    console.log("Payment Method details:", paymentData.paymentMethod);
     setAnimate(true);
-  }, []);
+  }, [paymentData, navigate]);
 
   const copyOrderId = () => {
     navigator.clipboard.writeText(paymentData.orderId);
@@ -33,134 +29,151 @@ export default function PaymentSuccessPage() {
   };
 
   const downloadReceipt = () => {
-    // Mock download functionality
     const receiptData = `
+===========================================
+           BESPOKE JEWELLERY CO.
+        Custom Design & Fabrication
+===========================================
+
 PAYMENT RECEIPT
 Order ID: ${paymentData.orderId}
 Product: ${paymentData.product}
-Amount: $${paymentData.amount}
-Date: ${paymentData.date}
-Payment Method: ${paymentData.paymentMethod}
+Amount: £${paymentData.amount.toFixed(2)}
+Date: ${new Date(paymentData.date).toLocaleDateString('en-GB', { 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit'
+})}
+Card: ${paymentData.paymentMethod.brand.toUpperCase()} **** ${paymentData.paymentMethod.last4}
 Email: ${paymentData.email}
-    `.trim();
-    
+${paymentData.creditsUpdateFailed 
+  ? `Credits Status: Failed to add ${paymentData.plannedCredits} credits - Please contact support
+Current Credits: ${paymentData.newCreditsTotal}` 
+  : `Credits Added: ${paymentData.creditsAdded}
+New Total Credits: ${paymentData.newCreditsTotal}`}
+
+===========================================
+Terms & Conditions: https://bespoke.co.uk/terms
+Support: support@bespoke.co.uk | +44 (0)20 1234 5678
+
+Thank you for choosing Bespoke Jewellery Co.
+Your trusted partner in custom jewellery design.
+===========================================`;
+
+    // Create blob and download
     const blob = new Blob([receiptData], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
+    const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `receipt-${paymentData.orderId}.txt`;
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center p-4">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-200 rounded-full opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-200 rounded-full opacity-20 animate-pulse delay-1000"></div>
+  // Return empty div if no payment data to prevent errors
+  if (!paymentData) {
+    return <div></div>;
+  }
+
+  return (    <div className="design-tool payment-success-page text-center max-w-2xl mx-auto p-6">      
+      <div className="logo-container mb-8">
+        <h2 className="text-2xl font-bold text-amber-600">Ellegance Jewellry</h2>
       </div>
+      
+      <div className={`success-card bg-white p-8 rounded-lg shadow-lg ${animate ? 'animate-fade-in' : ''}`}>
+        {paymentData.creditsUpdateFailed ? (
+          <AlertTriangle className="mx-auto mb-4 text-amber-500" size={48} />
+        ) : (
+          <CheckCircle className="mx-auto mb-4 text-amber-500" size={48} />
+        )}
+        
+        <h1 className="text-2xl font-bold mb-4">
+          {paymentData.creditsUpdateFailed 
+            ? 'Payment Processed - Action Required' 
+            : 'Payment Successful!'}
+        </h1>
 
-      <div className="relative max-w-md w-full">
-        {/* Success Card */}
-        <div className={`bg-white rounded-2xl shadow-2xl p-8 text-center transform transition-all duration-700 ${
-          animate ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'
-        }`}>
-          
-          {/* Success Icon */}
-          <div className="relative mb-6">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto animate-bounce">
-              <CheckCircle className="w-12 h-12 text-green-600" />
-            </div>
-            <div className="absolute inset-0 w-20 h-20 bg-green-200 rounded-full mx-auto animate-ping opacity-20"></div>
-          </div>
-
-          {/* Success Message */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
-          <p className="text-gray-600 mb-8">
-            Thank you for your purchase. Your payment has been processed successfully.
-          </p>
-
-          {/* Payment Details */}
-          <div className="bg-gray-50 rounded-xl p-6 mb-6 text-left">
-            <h3 className="font-semibold text-gray-900 mb-4">Order Details</h3>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Order ID</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-sm">{paymentData.orderId}</span>
-                  <button
-                    onClick={copyOrderId}
-                    className="p-1 hover:bg-gray-200 rounded transition-colors"
-                    title="Copy Order ID"
-                  >
-                    {copied ? (
-                      <Check className="w-4 h-4 text-green-600" />
-                    ) : (
-                      <Copy className="w-4 h-4 text-gray-500" />
-                    )}
-                  </button>
-                </div>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-gray-600">Product</span>
-                <span className="font-medium">{paymentData.product}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-gray-600">Amount</span>
-                <span className="font-bold text-lg">${paymentData.amount}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-gray-600">Payment Method</span>
-                <span>{paymentData.paymentMethod}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-gray-600">Date</span>
-                <span className="text-sm">{paymentData.date}</span>
-              </div>
+        <div className="order-details text-left space-y-3 mb-6">
+          <div className="detail-row">
+            <span className="font-medium">Order ID:</span>
+            <div className="flex items-center">
+              <span className="mr-2">{paymentData.orderId}</span>
+              <button 
+                onClick={copyOrderId}
+                className="text-amber-600 hover:text-amber-700"
+                title="Copy Order ID"
+              >
+                {copied ? <Check size={16} /> : <Copy size={16} />}
+              </button>
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="space-y-3">
-            <button
-              onClick={downloadReceipt}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 transform hover:scale-105"
-            >
-              <Download className="w-5 h-5" />
-              Download Receipt
-            </button>
-            
-            <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
-              <Mail className="w-5 h-5" />
-              Email Receipt
-            </button>
+          <div className="detail-row">
+            <span className="font-medium">Amount:</span>
+            <span>£{paymentData.amount.toFixed(2)}</span>
+          </div>          <div className="detail-row">
+            <span className="font-medium">Card:</span>
+            <span>
+              {paymentData.paymentMethod.brand.charAt(0).toUpperCase() + 
+               paymentData.paymentMethod.brand.slice(1)} •••• {paymentData.paymentMethod.last4}
+            </span>
+          </div>
+          <div className="detail-row">
+            <span className="font-medium">Email:</span>
+            <span>{paymentData.email}</span>
           </div>
 
-          {/* Footer Info */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500 mb-4">
-              A confirmation email has been sent to <br />
-              <span className="font-medium text-gray-700">{paymentData.email}</span>
-            </p>
-            
-            <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center justify-center gap-2 mx-auto transition-colors">
-              <ArrowLeft className="w-4 h-4" />
-              Return to Dashboard
-            </button>
+          <div className="detail-row">
+            <span className="font-medium">Date:</span>
+            <span>
+              {new Date(paymentData.date).toLocaleDateString('en-GB', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </span>
+          </div>
+
+          <div className="credits-info bg-amber-50 p-4 rounded-md my-4">
+            {paymentData.creditsUpdateFailed ? (
+              <div className="text-amber-700">
+                <p className="font-bold mb-2">Credits Update Failed</p>
+                <p>We were unable to add {paymentData.plannedCredits} credits to your account.</p>
+                <p>Current credits: {paymentData.newCreditsTotal}</p>
+                <p className="text-sm mt-2">Please contact support with your order ID for assistance.</p>
+              </div>
+            ) : (
+              <div className="text-amber-700">
+                <p className="font-bold mb-2">Credits Updated</p>
+                <p>Credits added: {paymentData.creditsAdded}</p>
+                <p>New total: {paymentData.newCreditsTotal}</p>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Additional Info */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-500">
-            Need help? <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">Contact Support</a>
-          </p>
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+          <button
+            onClick={() => navigate('/portal/design-tool')}
+            className="flex items-center justify-center gap-2 px-6 py-2 bg-white border-2 border-amber-500 text-amber-500 rounded hover:bg-amber-50"
+          >
+            <ArrowLeft size={20} />
+            Back to Design Tool
+          </button>
+          
+          <button
+            onClick={downloadReceipt}
+            className="flex items-center justify-center gap-2 px-6 py-2 bg-amber-500 text-white rounded hover:bg-amber-600"
+          >
+            <Download size={20} />
+            Download Receipt
+          </button>
         </div>
       </div>
     </div>

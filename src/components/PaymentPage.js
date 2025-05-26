@@ -508,8 +508,10 @@ const PaymentPage = () => {
         console.log("PaymentIntent status:", stripeResult.paymentIntent.status);
         console.log("PaymentIntent ID:", stripeResult.paymentIntent.id);
         console.log("PaymentIntent amount:", stripeResult.paymentIntent.amount);
-        console.log("PaymentIntent currency:", stripeResult.paymentIntent.currency);
-        console.log("Payment method details:", stripeResult.paymentIntent.payment_method ? "Present" : "Missing");
+        console.log("PaymentIntent currency:", stripeResult.paymentIntent.currency);      console.log("Payment method details:", stripeResult.paymentIntent.payment_method ? "Present" : "Missing");
+        
+        // Log complete payment method details
+        console.log("Complete payment method:", JSON.stringify(stripeResult.paymentIntent.payment_method, null, 2));
       }
 
       const { error, paymentIntent } = stripeResult;
@@ -550,106 +552,140 @@ const PaymentPage = () => {
       console.log("PaymentIntent ID:", paymentIntent.id);
       console.log("PaymentIntent amount received:", paymentIntent.amount_received);
       console.log("PaymentIntent amount:", paymentIntent.amount);
-      
-      if (paymentIntent.status === "succeeded") {
+        if (paymentIntent.status === "succeeded") {
         console.log("=== PAYMENT SUCCEEDED - PROCESSING CREDITS ===");
         
-        // Get the last 4 digits of the card for success page
-        console.log("Payment method object:", paymentIntent.payment_method ? "Present" : "Missing");
-        console.log("Card details:", paymentIntent.payment_method?.card ? "Present" : "Missing");
-        
-        const cardLast4 = paymentIntent.payment_method?.card?.last4 || "****";
-        const cardBrand = paymentIntent.payment_method?.card?.brand || "card";
-        
-        console.log("Card last 4:", cardLast4);
-        console.log("Card brand:", cardBrand);
-        
-        // Update user credits after successful payment
-        try {
-          console.log("=== UPDATING CREDITS ===");
-          console.log("About to call update-credits endpoint");
-          console.log("User ID:", userData?.id);
-          console.log("Credits to add:", selectedPlan.credits);
-          console.log("Payment Intent ID:", paymentIntent.id);
-          
-          const updatePayload = {
-            userId: userData?.id || "unknown",
-            credits: selectedPlan.credits,
-            paymentIntentId: paymentIntent.id,
-            amount: selectedPlan.price,
-            planName: selectedPlan.name,
-          };
-          
-          console.log("Update payload:", JSON.stringify(updatePayload, null, 2));
-          
-          const updateResponse = await fetch(`${API_ENDPOINT}/update-credits`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              ...authHeaders,
-            },
-            credentials: "include",
-            body: JSON.stringify(updatePayload),
-          });
+        // Initialize payment method details
+        let cardLast4 = "****";
+        let cardBrand = "card";
+        let paymentMethodDetails = null;
+          try {
+            const paymentMethodId = paymentIntent.payment_method;
+            console.log("Payment method ID:", paymentMethodId);
+            
+            if (paymentMethodId && stripe) {
+                paymentMethodDetails = await stripe.paymentMethods.retrieve(paymentMethodId);
+                console.log("Retrieved payment method:", JSON.stringify(paymentMethodDetails, null, 2));
+                
+                if (paymentMethodDetails?.card) {
+                    cardLast4 = paymentMethodDetails.card.last4;
+                    cardBrand = paymentMethodDetails.card.brand;
+                }
+            }
+        } catch (error) {
+            console.error("Failed to retrieve payment method details:", error);
+            console.error("Full error:", {
+                message: error.message,
+                stack: error.stack,
+                type: error.type,
+                raw: error
+            });
+            // Continue with default values since payment was still successful
+        }
+          try {
+            console.log("=== UPDATING CREDITS ===");
+            console.log("About to call update-credits endpoint");
+            console.log("User ID:", userData?.id);
+            console.log("Credits to add:", selectedPlan.credits);
+            console.log("Payment Intent ID:", paymentIntent.id);
+            
+            const updatePayload = {
+              userId: userData?.id || "unknown",
+              credits: selectedPlan.credits,
+              paymentIntentId: paymentIntent.id,
+              amount: selectedPlan.price,
+              planName: selectedPlan.name,
+            };
+            
+            console.log("Update payload:", JSON.stringify(updatePayload, null, 2));
+            
+            const updateResponse = await fetch(`${API_ENDPOINT}/update-credits`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                ...authHeaders,
+              },
+              credentials: "include",
+              body: JSON.stringify(updatePayload),
+            });
 
-          console.log("Update response status:", updateResponse.status);
-          console.log("Update response ok:", updateResponse.ok);
+            console.log("Update response status:", updateResponse.status);
+            console.log("Update response ok:", updateResponse.ok);
 
-          if (!updateResponse.ok) {
-            const errorDetails = await updateResponse.json().catch(() => ({}));
-            console.error("=== CREDITS UPDATE FAILED ===");
-            console.error("Status:", updateResponse.status);
-            console.error("Error details:", JSON.stringify(errorDetails, null, 2));
-            setErrorMessage(`Payment succeeded but failed to update credits: ${errorDetails.error || "Unknown error"}. Please contact support.`);
-            setPaymentStatus(PaymentStatus.FAILED);
-            return;
-          }
+            if (!updateResponse.ok) {
+              const errorDetails = await updateResponse.json().catch(() => ({}));
+              console.error("=== CREDITS UPDATE FAILED ===");            console.error("Status:", updateResponse.status);              console.error("Error details:", JSON.stringify(errorDetails, null, 2));
+              
+              // Navigate to success page with error info
+              const successData = {
+                orderId: paymentIntent.id,
+                amount: selectedPlan.price / 100,
+                currency: 'GBP',
+                product: `${selectedPlan.name} Plan - ${selectedPlan.credits} Credits`,
+                email: userData?.email || 'N/A',
+                paymentMethod: {
+                  brand: cardBrand || 'card',
+                  last4: cardLast4 || '****',
+                  type: paymentMethodDetails?.card?.funding || 'unknown'
+                },
+                date: new Date().toISOString(),
+                creditsAdded: 0,
+                planName: selectedPlan.name,
+                plannedCredits: selectedPlan.credits,
+                creditsUpdateFailed: true,
+                errorDetails: errorDetails.error || "Unknown error",
+                newCreditsTotal: userData?.credits || 0
+              };
+              
+              navigate('/payment-success', { 
+                state: { paymentData: successData },
+                replace: true 
+              });
+            }
 
-          const updateData = await updateResponse.json();
-          console.log("=== CREDITS UPDATE SUCCESSFUL ===");
-          console.log("Update response data:", JSON.stringify(updateData, null, 2));
-          
-          // Update local user data safely
-          setUserData(prev => ({
-            ...prev,
-            credits: updateData.newCredits || ((prev?.credits || 0) + selectedPlan.credits),
-          }));
-          
-          setPaymentStatus(PaymentStatus.SUCCESS);
-          
-          // Navigate to success page with payment details after a short delay
-          console.log("=== PREPARING SUCCESS NAVIGATION ===");
-          setTimeout(() => {
+            const updateData = await updateResponse.json();
+            console.log("=== CREDITS UPDATE SUCCESSFUL ===");
+            console.log("Update response data:", JSON.stringify(updateData, null, 2));
+              // Prepare navigation data
             const successData = {
               orderId: paymentIntent.id,
-              amount: selectedPlan.price / 100, // Convert from pence to pounds
+              amount: selectedPlan.price / 100,
               currency: 'GBP',
               product: `${selectedPlan.name} Plan - ${selectedPlan.credits} Credits`,
-              email: userData?.email || 'N/A',
-              paymentMethod: `${cardBrand.toUpperCase()} •••• ${cardLast4}`,
+              email: userData?.email || 'N/A',              paymentMethod: {
+                brand: paymentMethodDetails?.card?.brand || cardBrand || 'card',
+                last4: paymentMethodDetails?.card?.last4 || cardLast4 || '****',
+                type: paymentMethodDetails?.card?.funding || 'unknown'
+              },
               date: new Date().toISOString(),
               creditsAdded: selectedPlan.credits,
               planName: selectedPlan.name,
-              newCreditsTotal: updateData.newCredits || ((userData?.credits || 0) + selectedPlan.credits)
+              creditsUpdateFailed: false,
+              newCreditsTotal: updateData?.newCredits || ((userData?.credits || 0) + selectedPlan.credits)
             };
             
-            console.log("Success data for navigation:", JSON.stringify(successData, null, 2));
+            // Update local state
+            setUserData(prev => ({
+              ...prev,
+              credits: successData.newCreditsTotal,
+            }));
+            setPaymentStatus(PaymentStatus.SUCCESS);
             
-            // Navigate with state containing payment success data
-            navigate('/payment-success', { 
-              state: { paymentData: successData },
-              replace: true 
-            });
-          }, 2000);
-          
-        } catch (creditsError) {
-          console.error("=== CREDITS UPDATE EXCEPTION ===");
-          console.error("Error:", creditsError);
-          console.error("Error message:", creditsError.message);
-          console.error("Error stack:", creditsError.stack);
-          setErrorMessage("Payment succeeded but failed to update credits. Please contact support with your payment confirmation.");
-          setPaymentStatus(PaymentStatus.FAILED);
-        }
+            // Navigate after a short delay
+            console.log("Success data for navigation:", JSON.stringify(successData, null, 2));
+            setTimeout(() => {              navigate('/payment-success', { 
+                state: { paymentData: successData },
+                replace: true 
+              });
+            }, 1000);
+          } catch (error) {
+            console.error("=== CREDITS UPDATE EXCEPTION ===");
+            console.error("Error:", error);
+            console.error("Error message:", error.message);
+            console.error("Error stack:", error.stack);
+            setErrorMessage("Payment succeeded but failed to update credits. Please contact support with your payment confirmation.");
+            setPaymentStatus(PaymentStatus.FAILED);
+          }
       } else if (paymentIntent.status === "requires_action") {
         // Handle 3D Secure or other authentication
         console.log("=== PAYMENT REQUIRES ACTION ===");
