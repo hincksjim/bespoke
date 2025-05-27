@@ -6,6 +6,9 @@ const Dashboard = () => <h2>Dashboard</h2>;
 const MyDesigns = () => <h2>My Designs</h2>;
 const Profile = () => <h2>Profile</h2>;
 const Logout = () => <h2>Logged out!</h2>;
+
+// This component displays the privacy policy of the application.
+// It outlines how user data is collected, used, and protected.
 const PrivacyPolicy = () => (
   <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
     <h2>Privacy Policy</h2>

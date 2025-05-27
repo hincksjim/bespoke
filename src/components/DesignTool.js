@@ -1,3 +1,7 @@
+// This component provides a design tool for users to create and customize jewelry designs.
+// It integrates various services like Bedrock for image generation and AWS for saving designs.
+
+// Import necessary modules, services, and styles
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";

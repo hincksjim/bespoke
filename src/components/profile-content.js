@@ -4,6 +4,9 @@ import { useState } from "react"
 import { Save } from "lucide-react"
 import "./profile-content.css"
 
+// This component renders the profile content for an artisan.
+// It includes a form for updating personal and professional details.
+
 export default function ProfileContent({ artisanData }) {
   const [formData, setFormData] = useState({
     name: artisanData?.name || "",

@@ -5,6 +5,9 @@ import { ArrowLeft } from "lucide-react"
 import QuoteGenerator from "./quote-generator"
 import "./quote-generator-page.css"
 
+// This component serves as a page for generating and managing quotes.
+// It provides options to save or send quotes to clients.
+
 export default function QuoteGeneratorPage({ quoteRequest = null, onBack }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 

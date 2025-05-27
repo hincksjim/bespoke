@@ -10,6 +10,8 @@ import { listCreations } from '../graphql/queries';
 Amplify.configure(awsconfig);
 const client = generateClient();
 
+// This component displays a gallery of public designs.
+// It supports liking designs, pagination, and sorting by various criteria.
 export default function PublicDesignsGallery() {
   const { user } = useAuthenticator();
   const [designs, setDesigns] = useState([]);
@@ -403,4 +405,4 @@ export default function PublicDesignsGallery() {
     </main>
   );
 }
-  
+

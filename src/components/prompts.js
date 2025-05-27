@@ -1,3 +1,6 @@
+// This file contains predefined prompts for generating jewelry images and cost estimations.
+// It categorizes prompts based on gender and jewelry type.
+
 export const imagePrompts = {
   // Male Jewelry
   "Signet Ring": "Create a hd photo image of a men's signet ring on a Light brown colored Background with white rose petals blurred out and with lighting to showcase the jewelry at its best and showing reflections off the gem",

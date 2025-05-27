@@ -4,7 +4,8 @@ import { useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import awsconfig from "../aws-exports"
 
-// Simplified secondary login component that uses Cognito hosted UI
+// This component handles the secondary login process using AWS Cognito's hosted UI.
+// It supports both login and signup flows for secondary user pools.
 const SecondaryLoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()

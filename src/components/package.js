@@ -1,3 +1,4 @@
+// This file lists the dependencies required for specific components in the application.
 {
     "dependencies": {
       "@emotion/react": "^11.10.6",

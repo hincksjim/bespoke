@@ -1,4 +1,7 @@
 // colorMap.js
+// This module provides a mapping of gemstone colors to their corresponding hex or gradient values.
+// It is used for visual representation of gemstone colors in the application.
+
 export const colorMap = {
     'Colourless': '#F4F4F4',
     'Near Colourless': '#F8F8F8',

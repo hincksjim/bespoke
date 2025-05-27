@@ -1,6 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
+
+// This component renders the landing page for the application.
+// It introduces the platform, highlights its features, and provides a call-to-action for users to start designing.
+
 const LandingPage = () => {
   const navigate = useNavigate();
 

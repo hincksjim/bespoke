@@ -1,5 +1,8 @@
+// This file provides a React context for managing and accessing the selected country information.
+
 import React, { createContext, useState, useContext } from 'react';
 
+// Create a context for country data
 const CountryContext = createContext(undefined);
 
 export const useCountry = () => {
@@ -23,3 +26,5 @@ export const CountryProvider = ({ children }) => {
     </CountryContext.Provider>
   );
 };
+
+export default CountryContext;

@@ -1,3 +1,6 @@
+// This module provides functions to save custom prompts to an S3 bucket.
+// It includes functionality to load existing prompts, add new ones, and upload them as a JSON file.
+
 import { Amplify } from 'aws-amplify';
 import { uploadData, getUrl } from 'aws-amplify/storage';
 
@@ -19,11 +22,9 @@ export const savePromptToS3 = async (userId, promptName, promptContent) => {
         // Upload to S3
         const result = await uploadData({
             key: `${userId}/custom_prompts.json`,
-            data: promptsJson,
-            options: {
-                contentType: 'application/json',
-            }
-        }).result;
+            body: promptsJson,
+            contentType: 'application/json',
+        });
 
         console.log('Prompts saved successfully to S3:', result);
         return result;
@@ -57,30 +58,28 @@ export const loadPromptsFromS3 = async (userId) => {
         throw error;
     }
 };
-export const deletePromptFromS3 = async (userId, promptName, promptContent) => {
+export const deletePromptFromS3 = async (userId, promptName) => {
     try {
         // Load existing prompts or initialize an empty array
         const existingPrompts = await loadPromptsFromS3(userId) || [];
 
-        // Add new prompt
-        existingPrompts.delete({ name: promptName, prompt: promptContent });
+        // Filter out the prompt to be deleted
+        const updatedPrompts = existingPrompts.filter(prompt => prompt.name !== promptName);
 
         // Convert to JSON string
-        const promptsJson = JSON.stringify(existingPrompts);
+        const promptsJson = JSON.stringify(updatedPrompts);
 
-        // Upload to S3
+        // Upload updated prompts to S3
         const result = await uploadData({
             key: `${userId}/custom_prompts.json`,
-            data: promptsJson,
-            options: {
-                contentType: 'application/json',
-            }
-        }).result;
+            body: promptsJson,
+            contentType: 'application/json',
+        });
 
-        console.log('Prompts deleted successfully from S3:', result);
+        console.log('Prompt deleted successfully from S3:', result);
         return result;
     } catch (error) {
-        console.error('Error deleting prompts from S3:', error);
+        console.error('Error deleting prompt from S3:', error);
         throw error;
     }
 };

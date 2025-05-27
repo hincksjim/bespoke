@@ -35,6 +35,10 @@ const getClientQuery = `
   }
 `
 
+/**
+ * This component handles the payment process using Stripe.
+ * It includes a form for entering payment details and manages payment status.
+ */
 const PaymentPage = () => {
   const stripe = useStripe()
   const elements = useElements()
@@ -581,40 +585,43 @@ const PaymentPage = () => {
                 raw: error
             });
             // Continue with default values since payment was still successful
-        }
-          try {
-            console.log("=== UPDATING CREDITS ===");
-            console.log("About to call update-credits endpoint");
+        }          try {            console.log("=== UPDATING CREDITS ===");
+            console.log("About to update credits via GraphQL");
             console.log("User ID:", userData?.id);
+            console.log("Current credits:", userData?.credits);
             console.log("Credits to add:", selectedPlan.credits);
             console.log("Payment Intent ID:", paymentIntent.id);
             
-            const updatePayload = {
-              userId: userData?.id || "unknown",
-              credits: selectedPlan.credits,
-              paymentIntentId: paymentIntent.id,
-              amount: selectedPlan.price,
-              planName: selectedPlan.name,
-            };
+            const newTotalCredits = (userData?.credits || 0) + selectedPlan.credits;
             
-            console.log("Update payload:", JSON.stringify(updatePayload, null, 2));
+            // Initialize the GraphQL client
+            const client = generateClient();
+
+            // Define the GraphQL mutation for updating client credits
+            const updateClientMutation = `
+              mutation UpdateClient($input: UpdateClientInput!) {
+                updateClient(input: $input) {
+                  id
+                  credits
+                }
+              }
+            `;
             
-            const updateResponse = await fetch(`${API_ENDPOINT}/update-credits`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                ...authHeaders,
-              },
-              credentials: "include",
-              body: JSON.stringify(updatePayload),
+            const updateResponse = await client.graphql({
+              query: updateClientMutation,
+              variables: {
+                input: {
+                  id: userData?.id,
+                  credits: newTotalCredits
+                }
+              }
             });
 
-            console.log("Update response status:", updateResponse.status);
-            console.log("Update response ok:", updateResponse.ok);
+            console.log("GraphQL Update Response:", JSON.stringify(updateResponse, null, 2));
 
-            if (!updateResponse.ok) {
-              const errorDetails = await updateResponse.json().catch(() => ({}));
-              console.error("=== CREDITS UPDATE FAILED ===");            console.error("Status:", updateResponse.status);              console.error("Error details:", JSON.stringify(errorDetails, null, 2));
+            if (!updateResponse.data?.updateClient) {
+              console.error("=== CREDITS UPDATE FAILED ===");
+              console.error("GraphQL response:", updateResponse);
               
               // Navigate to success page with error info
               const successData = {
@@ -633,7 +640,7 @@ const PaymentPage = () => {
                 planName: selectedPlan.name,
                 plannedCredits: selectedPlan.credits,
                 creditsUpdateFailed: true,
-                errorDetails: errorDetails.error || "Unknown error",
+                errorDetails: "Failed to update credits in database",
                 newCreditsTotal: userData?.credits || 0
               };
               
@@ -643,7 +650,7 @@ const PaymentPage = () => {
               });
             }
 
-            const updateData = await updateResponse.json();
+            const updateData = updateResponse.data.updateClient;
             console.log("=== CREDITS UPDATE SUCCESSFUL ===");
             console.log("Update response data:", JSON.stringify(updateData, null, 2));
               // Prepare navigation data

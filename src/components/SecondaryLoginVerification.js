@@ -7,6 +7,24 @@ import { signUp, confirmSignUp, signIn } from 'aws-amplify/auth';
 // *** CHANGE END ***
 import awsconfig from '../aws-exports'; // Assuming aws-exports is in the parent directory
 
+// This component handles the secondary login and signup verification process.
+// It includes steps for signing up, confirming sign-up, and signing in using AWS Cognito.
+
+// Import necessary libraries and modules
+// React: For building the component and managing state
+// react-router-dom: For navigation and accessing route information
+// aws-amplify: For AWS Cognito authentication
+// aws-exports: Configuration file for AWS Amplify
+
+// Amplify configuration is temporarily overridden to use a secondary user pool for authentication.
+// This ensures that actions like sign-up, confirmation, and sign-in are performed in the correct context.
+
+// The component dynamically renders forms for different views: 'signUp', 'confirmSignUp', and 'signIn'.
+// Each view corresponds to a specific step in the authentication process.
+
+// Debugging information is displayed to assist with troubleshooting authentication issues.
+// This includes details about errors and responses from AWS Cognito.
+
 // Custom login component with verification steps
 const SecondaryLoginVerification = () => {
   const navigate = useNavigate();

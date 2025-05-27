@@ -343,7 +343,7 @@ export default function RecentDesignsGallery() {
             <button onClick={closeModal} className="btn close-btn">Close</button>
           </div>
         </div>
-      )}
+      )},
     </main>
  );
 }

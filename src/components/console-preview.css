@@ -1,3 +1,6 @@
+/* This CSS file styles the console preview interface.
+   It includes styles for the header, logo, and notification badges. */
+
 /* Preview Container */
 .preview-container {
     display: flex;
@@ -541,4 +544,3 @@
     color: #718096;
     text-decoration: none;
   }
-  

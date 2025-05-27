@@ -2,7 +2,8 @@ import React from 'react';
 import './AboutUs.css';
 import { useNavigate } from 'react-router-dom';
 
-
+// This component renders the 'About Us' page, providing information about the company's story, mission, and journey.
+// It includes a timeline of milestones and a call-to-action button for users to start exploring the platform.
 
 const About = () => {
   const handleRegisterClick = () => {

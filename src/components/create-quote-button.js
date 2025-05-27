@@ -1,5 +1,8 @@
 "use client"
 
+// This component renders a button to create a new quote and manages the state for showing the quote generator page.
+
+// Import necessary modules and styles
 import { useState } from "react"
 import { Plus } from "lucide-react"
 import QuoteGeneratorPage from "./quote-generator-page"
@@ -25,5 +28,5 @@ export default function CreateQuoteButton() {
       <Plus className="create-quote-icon" />
       Create New Quote
     </button>
-  )
+  );
 }

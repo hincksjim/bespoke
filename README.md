@@ -1,3 +1,94 @@
+# Bespoke Artisan Subscription Platform
+
+## Overview
+
+The Bespoke Artisan Subscription Platform is a web application designed to provide artisans with a subscription-based access to premium features. Artisans can subscribe to a monthly plan to unlock advanced tools and services, including unlimited quote responses, priority support, and analytics.
+
+## Features
+
+- **Artisan Console**: Manage quotes, view analytics, and access premium tools.
+- **Subscription Management**: Artisans can subscribe to a monthly plan and manage their subscription.
+- **Stripe Integration**: Secure payment processing using Stripe.
+- **Responsive Design**: Optimized for both desktop and mobile devices.
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd bespoke
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Set up environment variables:
+   - Create a `.env` file in the root directory.
+   - Add the following variables:
+     ```env
+     REACT_APP_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+     ```
+5. Start the development server:
+   ```bash
+   npm start
+   ```
+
+## Usage
+
+1. Navigate to the artisan console.
+2. Click on "Manage Subscription" in the sidebar.
+3. Subscribe to the monthly plan using the secure payment form.
+4. Access premium features after successful subscription.
+
+## Backend Setup
+
+Ensure the backend API is configured to handle subscription creation and return a `clientSecret` for Stripe payments. The endpoint `/api/create-subscription` should:
+
+- Accept the artisan's email and subscription plan.
+- Create a Stripe subscription.
+- Return the `clientSecret` for the payment.
+
+## Technologies Used
+
+- **React**: Frontend framework.
+- **Stripe**: Payment processing.
+- **AWS Amplify**: Authentication and backend services.
+- **React Router**: Client-side routing.
+
+## Folder Structure
+
+- `src/components`: Contains React components for the application.
+- `src/App.js`: Main application file with routing.
+- `src/index.js`: Entry point of the application.
+
+## Contributing
+
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Add feature description"
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature-name
+   ```
+5. Open a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Contact
+
+For support or inquiries, please contact [support@bespoke.co.uk](mailto:support@bespoke.co.uk).
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -4,6 +4,9 @@ import { useState, useEffect } from "react"
 import { Save, Send, Plus, Minus, Calculator, ImageIcon, FileText } from "lucide-react"
 import "./quote-generator.css"
 
+// This component handles the creation and editing of quotes.
+// It includes fields for client information, item details, materials, labor, and pricing.
+
 export default function QuoteGenerator({ quoteRequest = null, onSave, onSend }) {
   // Initialize form with default values or quote request data if editing
   const [formData, setFormData] = useState({

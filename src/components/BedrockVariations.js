@@ -1,9 +1,26 @@
+// This file defines the BedrockVariations module, which generates image variations using AWS Bedrock.
+// It processes a seed image and parameters like similarity and prompt strength to create variations.
+// Additionally, it provides a method to estimate the cost of generating these variations.
+
+// This service generates image variations using AWS Bedrock.
+// It processes a seed image and parameters like similarity and prompt strength to create variations.
+
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 import { getAuthenticatedCredentials } from './AuthService';
 
 const bedrockRegion = 'us-east-1';
 
 const BedrockVariations = {
+  /**
+   * generateImageVariations Function
+   * This function generates image variations based on the provided prompt, seed image, similarity strength, and prompt strength.
+   * It sends a request to AWS Bedrock using the BedrockRuntimeClient and processes the response to extract the generated images.
+   * @param {string} prompt - The prompt for generating image variations.
+   * @param {string} seedImage - The base64-encoded seed image or its URL.
+   * @param {number} Similarity_Strength - The strength of similarity to the seed image.
+   * @param {number} Prompt_Strength - The strength of the prompt's influence on the variations.
+   * @returns {Promise<Array>} A promise that resolves to an array of generated image variations.
+   */
   async generateImageVariations(prompt,seedImage,Similarity_Strength,Prompt_Strength) {
     try {
       console.log('Attempting to get authenticated credentials...');
@@ -82,6 +99,16 @@ const BedrockVariations = {
     }
   },
 
+  /**
+   * estimateVariationCost Function
+   * This function estimates the cost of generating image variations based on the provided parameters.
+   * It sends a request to AWS Bedrock using the BedrockRuntimeClient and processes the response to extract the cost estimate.
+   * @param {string} prompt - The prompt for generating image variations.
+   * @param {string} seedImage - The base64-encoded seed image or its URL.
+   * @param {number} promptStrength - The strength of the prompt's influence on the variations.
+   * @param {number} numberOfVariations - The number of image variations to generate.
+   * @returns {Promise<string>} A promise that resolves to the cost estimate as a string.
+   */
   async estimateVariationCost(prompt, seedImage, promptStrength, numberOfVariations) {
     try {
       console.log('Attempting to get authenticated credentials...');

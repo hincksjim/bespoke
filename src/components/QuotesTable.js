@@ -5,6 +5,9 @@ import { listCreations } from '../graphql/queries';
 import { useNavigate } from 'react-router-dom';
 import './QuotesTable.css';
 
+// This component displays a table of quotes submitted by the user.
+// It supports pagination, search, and navigation to quote details.
+
 const client = generateClient();
 
 export default function QuotesTable() {

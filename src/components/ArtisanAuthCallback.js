@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import awsExports from "../aws-exports"
 
+// This component processes the authentication callback for artisans.
+// It extracts the authorization code from the URL, exchanges it for tokens, and navigates to the artisan console.
 const ArtisanAuthCallback = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -127,3 +129,14 @@ const ArtisanAuthCallback = () => {
 }
 
 export default ArtisanAuthCallback
+
+// This file defines the ArtisanAuthCallback component, which handles the authentication callback for artisan users.
+// It processes the authorization code from the URL, exchanges it for tokens, and navigates the user to the artisan console.
+
+// processAuthCode Function
+// This function extracts the authorization code from the URL, exchanges it for tokens, and stores the tokens in localStorage.
+// It also handles errors during the authentication process and navigates the user to the artisan console upon success.
+
+// exchangeCodeForTokens Function
+// This helper function sends a POST request to the token endpoint to exchange the authorization code for tokens.
+// It uses the client ID, client secret, and redirect URI to authenticate the request and returns the tokens upon success.

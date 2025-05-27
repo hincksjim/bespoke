@@ -1,3 +1,6 @@
+// This module provides a function to save jewelry creation data to DynamoDB.
+// It constructs a creation input object based on selected options and sends it to the backend using GraphQL mutations.
+
 import { generateClient } from 'aws-amplify/api';
 import { createCreations } from '../graphql/mutations';
 

@@ -7,6 +7,9 @@ import { updateCreations, updateArtisanquote } from '../graphql/mutations';
 import './QuoteDetailsPage.css';
 import { Equal } from 'lucide-react';
 
+// This component displays the details of a specific order, including design and quotes.
+// It fetches data from the backend using GraphQL queries and manages state for client notes and required dates.
+
 const client = generateClient();
 
 export default function OrderDetailsPage() {

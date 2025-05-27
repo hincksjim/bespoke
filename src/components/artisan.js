@@ -6,6 +6,9 @@ import awsconfig from '../aws-exports';
 
 import './Artisan.css';
 
+// This file defines the Artisan component, which serves as the registration and management interface for artisan users.
+// It includes functionalities for signing up artisans in a secondary Cognito user pool, checking authentication status, and navigating to relevant pages.
+
 // Function to sign up a user in the secondary Cognito pool
 const signUpInSecondaryPool = async (email, password) => {
   try {
@@ -60,6 +63,9 @@ const signUpInSecondaryPool = async (email, password) => {
   }
 };
 
+// Artisan Component
+// This component renders the artisan registration page, including a hero section, an introduction to the artisan network, and a list of benefits.
+// It also provides a call-to-action button for artisans to register and handles the sign-up process with appropriate navigation and error handling.
 const Artisan = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);

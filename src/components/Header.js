@@ -5,6 +5,9 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { useCountry } from './CountryContext';
 import './Header.css';
 
+// This component renders the header of the application.
+// It includes navigation links, user authentication controls, and a country selector.
+
 export default function Header({ authenticated, onSignOut, userPoolType: propUserPoolType }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCountryMenuOpen, setIsCountryMenuOpen] = useState(false);

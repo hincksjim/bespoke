@@ -1,6 +1,12 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './CameraCapture.css'; // Import the CSS file
 
+// This file defines the CameraCapture component, which provides a camera capture interface with drawing capabilities.
+// It allows users to capture images and draw bounding boxes for specific areas on the video stream.
+
+// This component provides a camera capture interface with drawing capabilities.
+// It allows users to capture images and draw bounding boxes for specific areas.
+
 const CameraCapture = ({ onCapture }) => {
     const [isCameraActive, setIsCameraActive] = useState(false);
     const [isStreamReady, setIsStreamReady] = useState(false); // Keep for button logic/UI
@@ -194,6 +200,11 @@ const CameraCapture = ({ onCapture }) => {
     }, [startDrawingLoop, stopDrawingLoop]);
 
 
+    /**
+     * stopCamera Function
+     * This function stops the camera stream, clears the canvas, and resets the component's state.
+     * It ensures all resources are released and the UI is updated accordingly.
+     */
     const stopCamera = useCallback(() => {
         console.log('Stopping camera...');
 
@@ -250,6 +261,11 @@ const CameraCapture = ({ onCapture }) => {
     };
 
 
+    /**
+     * handleMouseDown Function
+     * This function starts the drawing process when the user clicks on the canvas.
+     * It records the starting position of the bounding box and sets the drawing state to active.
+     */
     const handleMouseDown = (event) => {
         console.log('handleMouseDown called.', { isStreamReady, drawnBoundingBox: !!drawnBoundingBox, button: event.button });
         if (!isStreamReady || drawnBoundingBox || event.button !== 0 || !canvasRef.current) return;

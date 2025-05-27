@@ -1,3 +1,7 @@
+// This component displays the dashboard content, including statistics and analytics for artisans.
+// It shows key metrics like pending quotes, completed quotes, revenue, and growth rate.
+
+// Import necessary icons and styles
 import { Clock, CheckCircle, DollarSign, TrendingUp } from "lucide-react"
 import "./dashboard-content.css"
 

@@ -4,6 +4,8 @@ import { useState } from "react"
 import { ChevronDown, ChevronUp, Edit, X, Check } from "lucide-react"
 import "./pending-quotes-content.css"
 
+// This component displays a list of pending quotes for an artisan.
+// It supports expanding and collapsing individual quotes for more details.
 export default function PendingQuotesContent({ artisanData }) {
   const [expandedQuoteId, setExpandedQuoteId] = useState(null)
 

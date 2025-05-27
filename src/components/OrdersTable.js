@@ -5,6 +5,9 @@ import { listCreations } from '../graphql/queries';
 import { useNavigate } from 'react-router-dom';
 import './OrdersTable.css';
 
+// This component renders a table of orders for the authenticated user.
+// It fetches designs from the backend and supports pagination and search functionality.
+
 const client = generateClient();
 
 export default function OrdersTable() {

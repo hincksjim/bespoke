@@ -7,6 +7,9 @@ import { updateCreations, updateArtisanquote } from '../graphql/mutations';
 import './QuoteDetailsPage.css';
 import { Equal } from 'lucide-react';
 
+// This component displays detailed information about a specific quote.
+// It fetches and shows design and quote data for a given ID.
+
 const client = generateClient();
 
 export default function QuoteDetailsPage() {

@@ -4,6 +4,11 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getCurrentUser } from "aws-amplify/auth"
 
+// This file defines the AuthCallback component, which handles the authentication callback for primary users.
+// It verifies the user's session, sets the user pool type to primary, and navigates to the customer portal upon successful authentication.
+
+// This component handles the authentication callback for primary users.
+// It verifies the user's session, sets the user pool type, and navigates to the customer portal.
 const AuthCallback = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -36,6 +41,10 @@ const AuthCallback = () => {
     processAuthCode()
   }, [navigate])
 
+  // Rendered Output
+  // The component displays a loading message while processing the authentication callback.
+  // If authentication is successful, it shows a success message and redirects the user to the dashboard.
+  // In case of errors, it displays an error message and redirects the user to the login page.
   return (
     <div className="auth-callback-container">
       <div className="auth-callback-content">

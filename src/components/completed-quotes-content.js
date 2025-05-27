@@ -4,6 +4,9 @@ import { useState } from "react"
 import { Search, Download, Eye, ChevronDown, ChevronUp } from "lucide-react"
 import "./completed-quotes-content.css"
 
+// This component displays a list of completed quotes for artisans.
+// It includes search functionality and allows users to expand quotes for more details.
+
 export default function CompletedQuotesContent({ artisanData }) {
   const [expandedQuoteId, setExpandedQuoteId] = useState(null)
   const [searchTerm, setSearchTerm] = useState("")

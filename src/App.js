@@ -14,6 +14,8 @@ import Privacy from "./components/Privacy"
 import PaymentPage from "./components/PaymentPage"
 import SecondaryLoginPage from "./components/SecondaryLoginPage"
 import PaymentSuccessPage from "./components/PaymentSuccessPage"
+import ArtisanPaymentPage from "./components/ArtisanPaymentPage"
+import ArtisanPaymentSuccessPage from "./components/ArtisanPaymentSuccessPage"
 import AuthCallback from "./components/AuthCallback"
 import ArtisanAuthCallback from "./components/ArtisanAuthCallback"
 import ArtisanConsole from "./components/artisan-console"
@@ -268,6 +270,7 @@ const AppRoutes = () => {
             <Route path="/auth/artisan-callback" element={<ArtisanAuthCallback />} />
             <Route path="/artisan-login" element={<SecondaryLoginPage />} />
             <Route path="/payment-success" element={<PaymentSuccessPage />} />
+            <Route path="/artisan-payment-success" element={<ArtisanPaymentSuccessPage />} />
 
             {/* --- Protected Routes --- */}
             <Route
@@ -299,12 +302,26 @@ const AppRoutes = () => {
               path="/payment"
               element={
                 <ProtectedRoute>
-                  {isAuthenticated ? (
+                  {isAuthenticated && (userPoolType === "primary" || userPoolType === null) ? (
                     <Elements stripe={stripePromise}>
                       <PaymentPage />
                     </Elements>
                   ) : (
                     <Navigate to="/login" replace />
+                  )}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/artisan-payment"
+              element={
+                <ProtectedRoute>
+                  {isAuthenticated && userPoolType === "secondary" ? (
+                    <Elements stripe={stripePromise}>
+                      <ArtisanPaymentPage />
+                    </Elements>
+                  ) : (
+                    <Navigate to="/artisan-login" replace />
                   )}
                 </ProtectedRoute>
               }

@@ -1,3 +1,6 @@
+// This module provides functions to retrieve image URLs for gemstone shapes and types.
+// It maps shape and gemstone names to their corresponding image files.
+
 const shapeToUrl = {
     'Round': require('./images/round.jpg'),
     'Oval': require('./images/oval.jpg'),

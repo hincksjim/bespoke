@@ -1,3 +1,6 @@
+// This module provides secondary authentication functions using AWS Amplify.
+// It includes functions to manage user sessions, sign in, and retrieve authenticated user details.
+
 import { useState, useEffect } from 'react';
 import { fetchAuthSession, signIn, signOut, getCurrentUser } from 'aws-amplify/auth';
 import { Amplify } from 'aws-amplify';

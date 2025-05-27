@@ -1,3 +1,6 @@
+// This module provides a function to save image data to an S3 bucket.
+// It converts a data URL to a Blob and uploads it to S3, returning the full URL of the uploaded image.
+
 import { Amplify } from 'aws-amplify';
 import { uploadData } from 'aws-amplify/storage';
 

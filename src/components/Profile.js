@@ -9,6 +9,9 @@ import './Profile.css';
 import UploadSelfieToS3 from './UploadSelfieToS3';
 import CameraCapture from './CameraCapturefull';
 
+// This component manages the user profile, including authentication and profile updates.
+// It integrates with AWS Amplify for authentication and storage.
+
 const initialFormState = {
   id: '',
   email: '',

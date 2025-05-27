@@ -21,6 +21,9 @@ import './CustomerPortal.css';
 const stripePromise = loadStripe('pk_test_51NimIrCGTRmYtOxofBHJVgHgTN9skZFONdlpzYClH15iqN4fVbbanVwCrVbi2nNmpIw0U3Uctwg3JBE4CwC8NUkK00Gqr6XGUF');
 console.log('Stripe initialized with key:', stripePromise);
 
+// This component serves as the main portal for customers.
+// It provides navigation to various features like profile, design tools, and payment management.
+
 // CustomerPortal component now accepts 'user' and 'signOut' props
 export default function CustomerPortal({ signOut, user }) {
   const navigate = useNavigate();

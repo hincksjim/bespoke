@@ -1,3 +1,6 @@
+// This function deletes a custom prompt from S3 and updates the UI accordingly.
+
+// Check if a prompt is selected before proceeding
 const deleteCustomPrompt = async () => {
     if (!selectedSavedPrompt) return;
 

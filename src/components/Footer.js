@@ -1,3 +1,6 @@
+// This component renders the footer of the application, including links to Terms and Conditions and Privacy Policy.
+
+// Import necessary modules and styles
 import React from 'react';
 import { Link } from 'react-router-dom';  // Import Link from react-router-dom
 import './Footer.css';

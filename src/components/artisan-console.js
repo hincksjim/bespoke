@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { useAuthenticator } from "@aws-amplify/ui-react"
+import { useNavigate } from "react-router-dom"
 
 // Import Lucide React Icons
-import { LayoutDashboard, Inbox, Reply, CheckCircle, XCircle, Settings, LogOut } from "lucide-react"
+import { LayoutDashboard, Inbox, Reply, CheckCircle, XCircle, Settings, LogOut, CreditCard } from "lucide-react"
 
+import SubscriptionContent from "./subscription-content"
 import "./artisan-console.css" // Import the CSS file
 
 // --- Mock Data ---
@@ -96,14 +98,16 @@ const formatDate = (dateString) => {
 
 // --- Sub-Components ---
 
-// Sidebar Component (Updated with Lucide Icons)
-const Sidebar = ({ artisanName, activeSection, setActiveSection, onSignOut }) => {
-  const navItems = [
+// Sidebar Component
+// This component renders the sidebar navigation menu for the artisan dashboard. It includes links to different sections such as Dashboard Overview, New Quotes, Responded Quotes, etc.
+// It also provides options for profile settings and logout.
+const Sidebar = ({ artisanName, activeSection, setActiveSection, onSignOut }) => {  const navItems = [
     { id: "overview", label: "Dashboard Overview", icon: LayoutDashboard },
     { id: "new", label: "New Quote Requests", icon: Inbox },
     { id: "responded", label: "Responded Quotes", icon: Reply },
     { id: "accepted", label: "Accepted/Won Quotes", icon: CheckCircle },
     { id: "rejected", label: "Rejected/Lost Quotes", icon: XCircle },
+    { id: "subscription", label: "Manage Subscription", icon: CreditCard },
   ]
 
   return (
@@ -153,6 +157,7 @@ const Sidebar = ({ artisanName, activeSection, setActiveSection, onSignOut }) =>
 }
 
 // Header Component
+// This component renders the header of the artisan dashboard. It includes a theme toggle button and optional sign-out functionality.
 const Header = ({ theme, toggleTheme, onSignOut }) => {
   // Mock data for selectors
 
@@ -176,6 +181,7 @@ const Header = ({ theme, toggleTheme, onSignOut }) => {
 }
 
 // Footer Component
+// This component renders the footer of the artisan dashboard. It includes links to the Terms & Conditions and Privacy Policy pages, as well as copyright information.
 const Footer = () => {
   const currentYear = new Date().getFullYear()
   return (
@@ -193,6 +199,7 @@ const Footer = () => {
 }
 
 // Metric Card Component
+// This reusable component displays a single metric with a title, value, and optional description. It is used in the Dashboard Overview to show key statistics.
 const MetricCard = ({ title, value, description }) => (
   <div className="metric-card">
     <h3>{title}</h3>
@@ -202,6 +209,8 @@ const MetricCard = ({ title, value, description }) => (
 )
 
 // Dashboard Overview Component
+// This component provides an overview of the artisan's dashboard, including metrics like total quotes received, response rate, and success rate.
+// It also displays the latest new quote requests and a placeholder for a quote status distribution chart.
 const DashboardOverview = ({ quotes, setActiveSection }) => {
   const totalQuotes = quotes.length
   const respondedQuotes = quotes.filter(
@@ -279,6 +288,8 @@ const DashboardOverview = ({ quotes, setActiveSection }) => {
 }
 
 // Quote List Component (Reusable)
+// This reusable component renders a list of quotes with filtering, sorting, and search functionalities.
+// It also includes action buttons for managing individual quotes, such as responding or viewing details.
 const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
   const [filteredQuotes, setFilteredQuotes] = useState(quotes)
   const [searchTerm, setSearchTerm] = useState("")
@@ -517,6 +528,8 @@ const ProfileSettings = ({ userAttributes }) => {
 }
 
 // --- Main Artisan Console Component ---
+// This component serves as the main console for artisans.
+// It displays quotes, subscription options, and navigation links for managing artisan-related tasks.
 const ArtisanConsole = ({ signOut }) => {
   const [artisanLoading, setArtisanLoading] = useState(true)
   const [userAttributes, setUserAttributes] = useState({})
@@ -652,8 +665,7 @@ const ArtisanConsole = ({ signOut }) => {
               isLoading={quotesLoading}
               error={quotesError}
             />
-          )}
-          {activeSection === "rejected" && (
+          )}          {activeSection === "rejected" && (
             <QuoteList
               quotes={quotesForSection}
               sectionTitle="Rejected/Lost Quotes"
@@ -661,6 +673,7 @@ const ArtisanConsole = ({ signOut }) => {
               error={quotesError}
             />
           )}
+          {activeSection === "subscription" && <SubscriptionContent />}
           {activeSection === "settings" && <ProfileSettings userAttributes={userAttributes} />}
           {/* Add other sections as needed */}
         </main>

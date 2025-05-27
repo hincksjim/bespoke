@@ -1,9 +1,20 @@
+// This file defines the BedrockService module, which integrates with AWS Bedrock to generate images and cost estimates.
+// It uses the BedrockRuntimeClient to send prompts and process responses for both image generation and cost estimation.
+
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 import { getAuthenticatedCredentials } from './AuthService';
 
 const bedrockRegion = 'us-east-1';
 
 const BedrockService = {
+  /**
+   * generateImagesAndCostEstimate Function
+   * This function generates images and cost estimates based on the provided prompts.
+   * It sends requests to AWS Bedrock using the BedrockRuntimeClient and processes the responses to extract images and cost estimates.
+   * @param {string} prompt - The prompt for generating images.
+   * @param {string} costPrompt - The prompt for estimating costs.
+   * @returns {Promise<{images: Array, costEstimate: string}>} A promise that resolves to an object containing the generated images and cost estimate.
+   */
   async generateImagesAndCostEstimate(prompt, costPrompt) {
     try {
       console.log('Attempting to get authenticated credentials...');

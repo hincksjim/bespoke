@@ -3,6 +3,8 @@ import { jewelryOptions } from './jewelryOptions';
 import { getGemShapeImage, getGemstoneImage } from './gemImages';
 import { colorMap } from './colourMap';
 
+// This component renders the jewelry selection options for customization.
+// It dynamically displays options based on the selected jewelry type and attributes.
 export function JewelrySelections({ selectedOptions, handleOptionSelect, renderOptions }) {
   const applicableForCutAndClarity = ['Diamond', 'Ruby', 'Sapphire', 'Emerald', 'Amethyst', 'Topaz', 'Aquamarine', 'Tanzanite', 'Morganite', 'Alexandrite', 'Tourmaline', 'Spinel', 'Zircon'];
 
