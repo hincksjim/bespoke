@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from "react-router-dom"
 import { ThemeProvider, Authenticator, useAuthenticator } from "@aws-amplify/ui-react"
 import "@aws-amplify/ui-react/styles.css"
+
 import Home from "./components/LandingPage"
 import AboutUs from "./components/AboutUs"
 import Artisan from "./components/artisan"
@@ -19,6 +20,7 @@ import ArtisanPaymentSuccessPage from "./components/ArtisanPaymentSuccessPage"
 import AuthCallback from "./components/AuthCallback"
 import ArtisanAuthCallback from "./components/ArtisanAuthCallback"
 import ArtisanConsole from "./components/artisan-console"
+import ArtisanQuoteDetailsPage from "./components/ArtisanQuoteDetailsPage"
 import "./App.css"
 import { Amplify } from "aws-amplify"
 import { signUp, fetchUserAttributes, updateUserAttributes } from "aws-amplify/auth"
@@ -274,11 +276,23 @@ const AppRoutes = () => {
 
             {/* --- Protected Routes --- */}
             <Route
-              path="/artisan-console"
+              path="/artisan-console/*"
               element={
                 <ProtectedRoute>
                   {userPoolType === "secondary" ? (
                     <ArtisanConsole user={user} signOut={handleSignOut} />
+                  ) : (
+                    <Navigate to="/portal/profile" replace />
+                  )}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/artisan-quote-details/:id"
+              element={
+                <ProtectedRoute>
+                  {userPoolType === "secondary" ? (
+                    <ArtisanQuoteDetailsPage />
                   ) : (
                     <Navigate to="/portal/profile" replace />
                   )}

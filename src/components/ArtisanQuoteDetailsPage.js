@@ -4,12 +4,12 @@ import { generateClient } from 'aws-amplify/api';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { getCreations, listArtisanquotes } from '../graphql/queries';
 import { updateArtisanquote } from '../graphql/mutations';
-import './QuoteDetailsPage.css';
+import './ArtisanQuoteDetailsPage.css';
 import { ChevronLeft, Eye, Download } from 'lucide-react';
 
 const client = generateClient();
 
-export default function QuoteDetailsPage() {
+export default function ArtisanQuoteDetailsPage() {
   const { id } = useParams();
   const { user } = useAuthenticator();
   const navigate = useNavigate();
@@ -85,7 +85,7 @@ export default function QuoteDetailsPage() {
 
   if (loading) {
     return (
-      <div className="quote-details-page loading-state">
+      <div className="artisan-quote-details-page loading-state">
         <div className="loader">Loading...</div>
       </div>
     );
@@ -93,7 +93,7 @@ export default function QuoteDetailsPage() {
 
   if (error) {
     return (
-      <div className="quote-details-page error-state">
+      <div className="artisan-quote-details-page error-state">
         <h2>Error</h2>
         <p>{error}</p>
         <button onClick={() => navigate(-1)} className="back-button">
@@ -106,7 +106,7 @@ export default function QuoteDetailsPage() {
 
   if (!design) {
     return (
-      <div className="quote-details-page error-state">
+      <div className="artisan-quote-details-page error-state">
         <h2>Not Found</h2>
         <p>No design found with the given ID.</p>
         <button onClick={() => navigate(-1)} className="back-button">
@@ -118,7 +118,7 @@ export default function QuoteDetailsPage() {
   }
 
   return (
-    <div className="quote-details-page">
+    <div className="artisan-quote-details-page">
       <div className="page-header">
         <button onClick={() => navigate(-1)} className="back-button">
           <ChevronLeft size={20} />

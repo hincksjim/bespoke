@@ -2,89 +2,60 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    padding: 1.5rem;
   }
   
   .dashboard-title {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #1a202c;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
   }
   
   /* Stats Grid */
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.5rem;
-  }
-  
-  @media (min-width: 640px) {
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .stats-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
+    margin-bottom: 2rem;
   }
   
   .stat-card {
-    background-color: white;
+    background-color: #fff;
     border-radius: 0.5rem;
     padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
   }
   
+  .stat-card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .stat-card-yellow { border-left: 4px solid #fbbf24; }
+  .stat-card-green { border-left: 4px solid #34d399; }
+  .stat-card-blue { border-left: 4px solid #3b82f6; }
+  .stat-card-purple { border-left: 4px solid #8b5cf6; }
+  
   .stat-card-icon-container {
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 9999px;
+    border-radius: 50%;
     margin-right: 1rem;
   }
   
-  .stat-card-yellow .stat-card-icon-container {
-    background-color: #fefcbf;
-  }
-  
-  .stat-card-green .stat-card-icon-container {
-    background-color: #c6f6d5;
-  }
-  
-  .stat-card-blue .stat-card-icon-container {
-    background-color: #bee3f8;
-  }
-  
-  .stat-card-purple .stat-card-icon-container {
-    background-color: #e9d8fd;
-  }
-  
-  .stat-card-yellow .stat-card-icon {
-    color: #d69e2e;
-  }
-  
-  .stat-card-green .stat-card-icon {
-    color: #38a169;
-  }
-  
-  .stat-card-blue .stat-card-icon {
-    color: #3182ce;
-  }
-  
-  .stat-card-purple .stat-card-icon {
-    color: #805ad5;
-  }
+  .stat-card-yellow .stat-card-icon-container { background-color: #fef3c7; }
+  .stat-card-green .stat-card-icon-container { background-color: #d1fae5; }
+  .stat-card-blue .stat-card-icon-container { background-color: #dbeafe; }
+  .stat-card-purple .stat-card-icon-container { background-color: #ede9fe; }
   
   .stat-card-icon {
-    width: 1.5rem;
-    height: 1.5rem;
+    color: #4a5568;
   }
   
   .stat-card-content {
@@ -93,26 +64,25 @@
   
   .stat-card-label {
     font-size: 0.875rem;
-    color: #718096;
+    color: #4a5568;
     margin-bottom: 0.25rem;
   }
   
   .stat-card-value {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 600;
     color: #1a202c;
   }
   
   /* Recent Quotes */
   .recent-quotes-card {
-    background-color: white;
+    background-color: #fff;
     border-radius: 0.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
   }
   
   .recent-quotes-header {
-    padding: 1rem 1.5rem;
+    padding: 1.25rem 1.5rem;
     border-bottom: 1px solid #e2e8f0;
   }
   
@@ -128,7 +98,7 @@
   }
   
   .recent-quote-item {
-    padding: 1rem 1.5rem;
+    padding: 1.25rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -142,6 +112,7 @@
   
   .recent-quote-details {
     flex: 1;
+    min-width: 0; /* Enables text truncation */
   }
   
   .recent-quote-client {
@@ -153,10 +124,18 @@
   .recent-quote-description {
     font-size: 0.875rem;
     color: #718096;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 500px;
   }
   
   .recent-quote-meta {
     text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 1rem;
   }
   
   .recent-quote-value {
@@ -168,6 +147,7 @@
   .recent-quote-date {
     font-size: 0.75rem;
     color: #a0aec0;
+    margin-bottom: 0.5rem;
   }
   
   .recent-quotes-empty {
@@ -179,6 +159,7 @@
   .recent-quotes-footer {
     padding: 1rem 1.5rem;
     border-top: 1px solid #e2e8f0;
+    text-align: center;
   }
   
   .view-all-button {
@@ -189,9 +170,28 @@
     font-weight: 500;
     cursor: pointer;
     transition: color 0.2s;
+    padding: 0.5rem 1rem;
   }
   
   .view-all-button:hover {
     color: #2c5282;
   }
   
+  .view-details-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border: none;
+    background-color: #edf2f7;
+    color: #4a5568;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .view-details-button:hover {
+    background-color: #e2e8f0;
+    color: #2d3748;
+  }

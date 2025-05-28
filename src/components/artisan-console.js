@@ -2,15 +2,39 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { useAuthenticator } from "@aws-amplify/ui-react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Routes, Route } from "react-router-dom"
+import ArtisanQuoteDetailsPage from "./ArtisanQuoteDetailsPage"
 
 // Import Lucide React Icons
 import { LayoutDashboard, Inbox, Reply, CheckCircle, XCircle, Settings, LogOut, CreditCard } from "lucide-react"
 
+// Import Components
+import QuoteRequestsList from "./quote-requests-list"
 import SubscriptionContent from "./subscription-content"
+import DashboardContent from "./dashboard-content"
 import "./artisan-console.css" // Import the CSS file
 
-// --- Mock Data ---
+// Helper function to calculate growth rate based on historical data
+const calculateGrowthRate = (quotes) => {
+  if (!Array.isArray(quotes) || quotes.length === 0) return 0
+
+  const currentMonth = new Date().getMonth()
+  const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1
+
+  const currentMonthQuotes = quotes.filter(
+    (q) => q.status === "Completed" && new Date(q.completionDate).getMonth() === currentMonth,
+  ).length
+
+  const lastMonthQuotes = quotes.filter(
+    (q) => q.status === "Completed" && new Date(q.completionDate).getMonth() === lastMonth,
+  ).length
+
+  if (lastMonthQuotes === 0) return currentMonthQuotes > 0 ? 100 : 0
+
+  return Math.round(((currentMonthQuotes - lastMonthQuotes) / lastMonthQuotes) * 100)
+}
+
+// Mock data for testing - replace with real API data in production
 const MOCK_QUOTES = [
   {
     id: "q1",
@@ -20,6 +44,7 @@ const MOCK_QUOTES = [
     submissionDate: "2024-04-28",
     status: "New",
     type: "Ring",
+    estimatedValue: 1500,
   },
   {
     id: "q2",
@@ -27,62 +52,11 @@ const MOCK_QUOTES = [
     clientLocation: "New York, USA",
     requirements: "Silver necklace repair",
     submissionDate: "2024-04-27",
-    status: "Responded",
+    status: "Completed",
     type: "Repair",
-  },
-  {
-    id: "q3",
-    clientName: "Charlie Brown",
-    clientLocation: "Paris, FR",
-    requirements: "Engraved platinum bracelet",
-    submissionDate: "2024-04-26",
-    status: "Accepted",
-    type: "Bracelet",
-  },
-  {
-    id: "q4",
-    clientName: "Diana Prince",
-    clientLocation: "Berlin, DE",
-    requirements: "Bespoke earrings, emeralds",
-    submissionDate: "2024-04-25",
-    status: "Rejected",
-    type: "Earrings",
-  },
-  {
-    id: "q5",
-    clientName: "Ethan Hunt",
-    clientLocation: "Rome, IT",
-    requirements: "Watch strap replacement",
-    submissionDate: "2024-04-29",
-    status: "New",
-    type: "Watch",
-  },
-  {
-    id: "q6",
-    clientName: "Fiona Glenanne",
-    clientLocation: "Manchester, UK",
-    requirements: "Gold pendant design",
-    submissionDate: "2024-04-24",
-    status: "Accepted",
-    type: "Pendant",
-  },
-  {
-    id: "q7",
-    clientName: "George Costanza",
-    clientLocation: "Los Angeles, USA",
-    requirements: "Resize silver ring",
-    submissionDate: "2024-04-23",
-    status: "Responded",
-    type: "Ring",
-  },
-  {
-    id: "q8",
-    clientName: "Hannah Abbott",
-    clientLocation: "Sydney, AU",
-    requirements: "Pearl necklace restringing",
-    submissionDate: "2024-04-30",
-    status: "New",
-    type: "Necklace",
+    completionDate: "2024-05-15",
+    estimatedValue: 500,
+    finalPrice: 450,
   },
 ]
 
@@ -101,9 +75,10 @@ const formatDate = (dateString) => {
 // Sidebar Component
 // This component renders the sidebar navigation menu for the artisan dashboard. It includes links to different sections such as Dashboard Overview, New Quotes, Responded Quotes, etc.
 // It also provides options for profile settings and logout.
-const Sidebar = ({ artisanName, activeSection, setActiveSection, onSignOut }) => {  const navItems = [
+const Sidebar = ({ artisanName, activeSection, setActiveSection, onSignOut }) => {
+  const navItems = [
     { id: "overview", label: "Dashboard Overview", icon: LayoutDashboard },
-    { id: "new", label: "New Quote Requests", icon: Inbox },
+    { id: "quote-requests", label: "Quote Requests", icon: Inbox },
     { id: "responded", label: "Responded Quotes", icon: Reply },
     { id: "accepted", label: "Accepted/Won Quotes", icon: CheckCircle },
     { id: "rejected", label: "Rejected/Lost Quotes", icon: XCircle },
@@ -291,6 +266,7 @@ const DashboardOverview = ({ quotes, setActiveSection }) => {
 // This reusable component renders a list of quotes with filtering, sorting, and search functionalities.
 // It also includes action buttons for managing individual quotes, such as responding or viewing details.
 const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
+  const navigate = useNavigate();
   const [filteredQuotes, setFilteredQuotes] = useState(quotes)
   const [searchTerm, setSearchTerm] = useState("")
   const [filters, setFilters] = useState({ type: "All", dateRange: "", status: "All", location: "" })
@@ -371,12 +347,16 @@ const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
   const handleFilterChange = (e) => {
     const { name, value } = e.target
     setFilters((prev) => ({ ...prev, [name]: value }))
-  }
-
-  // Action Button Handler (Example)
+  }  // Action Button Handler
   const handleAction = (action, quoteId) => {
-    alert(`${action} action triggered for quote ${quoteId}`)
-    // Add actual logic here (e.g., navigate to detail page, open modal)
+    if (action === "View Details" || action === "Details") {
+      navigate(`/artisan-quote-details/${quoteId}`);
+    } else if (action === "Respond") {
+      // TODO: Implement respond functionality
+      console.log(`Responding to quote ${quoteId}`);
+    } else {
+      console.log(`${action} action triggered for quote ${quoteId}`);
+    }
   }
 
   if (isLoading) return <div className="loading-state">Loading quotes...</div>
@@ -480,14 +460,16 @@ const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
                   <td data-label="Status">
                     <span className={`status-badge status-${quote.status.toLowerCase()}`}>{quote.status}</span>
                   </td>
-                  <td data-label="Actions">
-                    <div className="action-buttons-group">
+                  <td data-label="Actions">                    <div className="action-buttons-group">
                       {quote.status === "New" && (
                         <button onClick={() => handleAction("Respond", quote.id)} className="action-button respond">
                           Respond
                         </button>
                       )}
-                      <button onClick={() => handleAction("View Details", quote.id)} className="action-button view">
+                      <button 
+                        onClick={() => handleAction("Details", quote.id)} 
+                        className="action-button view"
+                      >
                         Details
                       </button>
                       {/* Add other relevant actions based on status */}
@@ -550,7 +532,7 @@ const ArtisanConsole = ({ signOut }) => {
       setArtisanLoading(true)
       setError(null)
       try {
-        // MOCK USER ATTRIBUTES FOR TESTING UI W/O ACTUAL AUTH
+        // TODO: Replace with real user attributes fetching
         setUserAttributes({
           given_name: "Artisan",
           family_name: "User",
@@ -570,26 +552,43 @@ const ArtisanConsole = ({ signOut }) => {
   useEffect(() => {
     setQuotesLoading(true)
     setQuotesError(null)
-    // Simulate API call
-    const timer = setTimeout(() => {
-      try {
-        // Simulate success
-        setAllQuotes(MOCK_QUOTES)
-        setQuotesLoading(false)
-      } catch (err) {
-        setQuotesError(err)
-        setQuotesLoading(false)
-      }
-    }, 1500) // Simulate network delay
 
-    return () => clearTimeout(timer) // Cleanup timer on unmount
+    // TODO: Replace with real API call to fetch quotes
+    try {
+      // Demo data structure matches your real data
+      setAllQuotes([
+        {
+          id: "q1",
+          clientName: "Alice Smith",
+          clientLocation: "London, UK",
+          requirements: "Custom gold ring with diamond",
+          submissionDate: "2024-04-28",
+          status: "New",
+          type: "Ring",
+          estimatedValue: 1500,
+        },
+        {
+          id: "q2",
+          clientName: "Bob Johnson",
+          clientLocation: "New York, USA",
+          requirements: "Silver necklace repair",
+          submissionDate: "2024-04-27",
+          status: "Completed",
+          type: "Repair",
+          estimatedValue: 500,
+          finalPrice: 450,
+        },
+      ])
+      setQuotesLoading(false)
+    } catch (err) {
+      setQuotesError(err)
+      setQuotesLoading(false)
+    }
   }, []) // Fetch once on component mount
 
   // Filter quotes based on active section
   const quotesForSection = useMemo(() => {
     switch (activeSection) {
-      case "new":
-        return allQuotes.filter((q) => q.status === "New")
       case "responded":
         return allQuotes.filter((q) => q.status === "Responded")
       case "accepted":
@@ -629,7 +628,6 @@ const ArtisanConsole = ({ signOut }) => {
 
   // Determine artisan name for sidebar
   const artisanName = userAttributes.given_name || userAttributes.email || "Artisan"
-
   return (
     <div className={`artisan-dashboard-container ${theme}-theme`}>
       <Sidebar
@@ -640,44 +638,41 @@ const ArtisanConsole = ({ signOut }) => {
       />
       <div className="main-content-area">
         <Header theme={theme} toggleTheme={toggleTheme} onSignOut={signOut} />
-        <main className="dashboard-content">
-          {activeSection === "overview" && <DashboardOverview quotes={allQuotes} setActiveSection={setActiveSection} />}
-          {activeSection === "new" && (
-            <QuoteList
-              quotes={quotesForSection}
-              sectionTitle="New Quote Requests"
-              isLoading={quotesLoading}
-              error={quotesError}
-            />
-          )}
-          {activeSection === "responded" && (
-            <QuoteList
-              quotes={quotesForSection}
-              sectionTitle="Responded Quotes"
-              isLoading={quotesLoading}
-              error={quotesError}
-            />
-          )}
-          {activeSection === "accepted" && (
-            <QuoteList
-              quotes={quotesForSection}
-              sectionTitle="Accepted/Won Quotes"
-              isLoading={quotesLoading}
-              error={quotesError}
-            />
-          )}          {activeSection === "rejected" && (
-            <QuoteList
-              quotes={quotesForSection}
-              sectionTitle="Rejected/Lost Quotes"
-              isLoading={quotesLoading}
-              error={quotesError}
-            />
-          )}
-          {activeSection === "subscription" && <SubscriptionContent />}
-          {activeSection === "settings" && <ProfileSettings userAttributes={userAttributes} />}
-          {/* Add other sections as needed */}
+        <main className="dashboard-content">          <Routes>
+            <Route path="/" element={
+              <>
+                {activeSection === "overview" && (
+                  <DashboardContent
+                    artisanData={{
+                      recentQuotes: allQuotes,
+                      pendingQuotes: allQuotes.filter((q) => q.status === "New").length,
+                      completedQuotes: allQuotes.filter((q) => q.status === "Completed").length,
+                      monthlyRevenue: allQuotes
+                        .filter(
+                          (q) =>
+                            q.status === "Completed" &&
+                            new Date(q.completionDate).getMonth() === new Date().getMonth(),
+                        )
+                        .reduce((sum, q) => sum + (q.finalPrice || 0), 0),
+                      growthRate: calculateGrowthRate(allQuotes),
+                    }}
+                    setActiveSection={setActiveSection}
+                  />
+                )}
+                {activeSection === "quote-requests" && (
+                  <QuoteList
+                    quotes={quotesForSection}
+                    sectionTitle="Quote Requests"
+                    isLoading={quotesLoading}
+                    error={quotesError}
+                  />
+                )}
+                {/* Add other section components here */}
+              </>
+            } />
+            <Route path="quote-details/:id" element={<ArtisanQuoteDetailsPage />} />
+          </Routes>
         </main>
-        <Footer />
       </div>
     </div>
   )

@@ -1,0 +1,281 @@
+.quote-requests {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.quote-requests h2 {
+  margin-bottom: 24px;
+  color: #1a1a1a;
+  font-size: 1.8em;
+}
+
+/* Loading and Error States */
+.loading,
+.error {
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.loading {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.error {
+  background-color: #fee;
+  color: #c00;
+}
+
+/* Search and Filters Container */
+.filters-container {
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+  flex: 1;
+  min-width: 250px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+}
+
+.filter-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  min-width: 150px;
+  cursor: pointer;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+}
+
+/* Table Styles */
+.table-responsive {
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.quotes-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+.quotes-table th,
+.quotes-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.quotes-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.quotes-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.quotes-table td {
+  color: #444;
+}
+
+/* Image cell styles */
+.request-image-cell {
+  width: 80px;
+  padding: 8px !important;
+}
+
+.request-thumbnail {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.request-thumbnail:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Button icon styles */
+.button-icon {
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.action-button.view {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 12px;
+}
+
+/* Sortable Headers */
+.sortable {
+  cursor: pointer;
+  position: relative;
+  padding-right: 24px;
+  user-select: none;
+}
+
+.sort-indicator {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.sort-indicator::before {
+  content: "▲";
+  position: absolute;
+  top: -8px;
+  right: 0;
+  opacity: 0.3;
+}
+
+.sort-indicator::after {
+  content: "▼";
+  position: absolute;
+  bottom: -8px;
+  right: 0;
+  opacity: 0.3;
+}
+
+th.sort-asc .sort-indicator::before {
+  opacity: 1;
+  color: #0066cc;
+}
+
+th.sort-desc .sort-indicator::after {
+  opacity: 1;
+  color: #0066cc;
+}
+
+/* Action Buttons */
+.action-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.action-button.view {
+  background-color: #0066cc;
+  color: white;
+}
+
+.action-button.view:hover {
+  background-color: #0052a3;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  border-color: #0066cc;
+  color: #0066cc;
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-info {
+  color: #666;
+  font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .filters-container {
+    flex-direction: column;
+  }
+
+  .search-container,
+  .filter-controls {
+    width: 100%;
+  }
+
+  .quotes-table th {
+    white-space: nowrap;
+  }
+
+  .action-button {
+    width: 100%;
+  }
+
+  .request-image-cell {
+    width: 60px;
+    padding: 6px !important;
+  }
+
+  .request-thumbnail {
+    width: 48px;
+    height: 48px;
+  }
+}
