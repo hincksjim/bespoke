@@ -2,17 +2,21 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { useAuthenticator } from "@aws-amplify/ui-react"
-import { useNavigate, Routes, Route } from "react-router-dom"
-import ArtisanQuoteDetailsPage from "./ArtisanQuoteDetailsPage"
+import { useNavigate } from "react-router-dom"
+import { generateClient } from 'aws-amplify/api'
+import { listCreations } from '../graphql/queries'
 
 // Import Lucide React Icons
 import { LayoutDashboard, Inbox, Reply, CheckCircle, XCircle, Settings, LogOut, CreditCard } from "lucide-react"
 
 // Import Components
 import QuoteRequestsList from "./quote-requests-list"
+import ProfileSettings from "./profile-settings"  
 import SubscriptionContent from "./subscription-content"
 import DashboardContent from "./dashboard-content"
 import "./artisan-console.css" // Import the CSS file
+
+const client = generateClient()
 
 // Helper function to calculate growth rate based on historical data
 const calculateGrowthRate = (quotes) => {
@@ -22,11 +26,11 @@ const calculateGrowthRate = (quotes) => {
   const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1
 
   const currentMonthQuotes = quotes.filter(
-    (q) => q.status === "Completed" && new Date(q.completionDate).getMonth() === currentMonth,
+    (q) => q.status === "Completed" && new Date(q.completionDate || getQuoteDate(q)).getMonth() === currentMonth,
   ).length
 
   const lastMonthQuotes = quotes.filter(
-    (q) => q.status === "Completed" && new Date(q.completionDate).getMonth() === lastMonth,
+    (q) => q.status === "Completed" && new Date(q.completionDate || getQuoteDate(q)).getMonth() === lastMonth,
   ).length
 
   if (lastMonthQuotes === 0) return currentMonthQuotes > 0 ? 100 : 0
@@ -34,40 +38,22 @@ const calculateGrowthRate = (quotes) => {
   return Math.round(((currentMonthQuotes - lastMonthQuotes) / lastMonthQuotes) * 100)
 }
 
-// Mock data for testing - replace with real API data in production
-const MOCK_QUOTES = [
-  {
-    id: "q1",
-    clientName: "Alice Smith",
-    clientLocation: "London, UK",
-    requirements: "Custom gold ring with diamond",
-    submissionDate: "2024-04-28",
-    status: "New",
-    type: "Ring",
-    estimatedValue: 1500,
-  },
-  {
-    id: "q2",
-    clientName: "Bob Johnson",
-    clientLocation: "New York, USA",
-    requirements: "Silver necklace repair",
-    submissionDate: "2024-04-27",
-    status: "Completed",
-    type: "Repair",
-    completionDate: "2024-05-15",
-    estimatedValue: 500,
-    finalPrice: 450,
-  },
-]
-
 // --- Helper Functions ---
 const formatDate = (dateString) => {
   if (!dateString) return "N/A"
   try {
-    return new Date(dateString).toLocaleDateString()
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return "Invalid Date"
+    return date.toLocaleDateString()
   } catch (e) {
     return "Invalid Date"
   }
+}
+
+// Helper function to get the creation date from quote
+// Fixed to use createdAt as the primary date field
+const getQuoteDate = (quote) => {
+  return quote.createdAt || quote.updatedAt || null
 }
 
 // --- Sub-Components ---
@@ -196,14 +182,20 @@ const DashboardOverview = ({ quotes, setActiveSection }) => {
   const responseRate = totalQuotes > 0 ? ((respondedQuotes / totalQuotes) * 100).toFixed(1) : 0
   const successRate = respondedQuotes > 0 ? ((acceptedQuotes / respondedQuotes) * 100).toFixed(1) : 0
 
+  // Get latest 5 new quote requests, sorted by creation date (most recent first)
   const latestRequests = quotes
-    .filter((q) => q.status === "New")
-    .sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate))
+    .filter((q) => q.status === "New" || q.submittedforquote === true)
+    .sort((a, b) => {
+      const dateA = new Date(getQuoteDate(a))
+      const dateB = new Date(getQuoteDate(b))
+      return dateB - dateA // Most recent first
+    })
     .slice(0, 5) // Show latest 5
 
   // Placeholder for chart data calculation
   const statusCounts = quotes.reduce((acc, quote) => {
-    acc[quote.status] = (acc[quote.status] || 0) + 1
+    const status = quote.status || (quote.submittedforquote ? "New" : "Unknown")
+    acc[status] = (acc[status] || 0) + 1
     return acc
   }, {})
 
@@ -227,9 +219,14 @@ const DashboardOverview = ({ quotes, setActiveSection }) => {
             <ul>
               {latestRequests.map((quote) => (
                 <li key={quote.id}>
-                  <span>
-                    {quote.clientName} - {quote.requirements.substring(0, 30)}...
-                  </span>
+                  <div className="quote-summary">
+                    <span className="client-info">
+                      {quote.clientName || quote.clientID} - {(quote.prompt || quote.jewellrytype || "").substring(0, 30)}...
+                    </span>
+                    <span className="quote-date">
+                      {formatDate(getQuoteDate(quote))}
+                    </span>
+                  </div>
                   <button
                     onClick={() => {
                       /* Implement view details logic */ alert(`Viewing details for ${quote.id}`)
@@ -244,7 +241,7 @@ const DashboardOverview = ({ quotes, setActiveSection }) => {
           ) : (
             <p>No new quote requests.</p>
           )}
-          <button className="view-all-button" onClick={() => setActiveSection("new")}>
+          <button className="view-all-button" onClick={() => setActiveSection("quote-requests")}>
             View All New Requests
           </button>
         </div>
@@ -266,15 +263,14 @@ const DashboardOverview = ({ quotes, setActiveSection }) => {
 // This reusable component renders a list of quotes with filtering, sorting, and search functionalities.
 // It also includes action buttons for managing individual quotes, such as responding or viewing details.
 const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
-  const navigate = useNavigate();
   const [filteredQuotes, setFilteredQuotes] = useState(quotes)
   const [searchTerm, setSearchTerm] = useState("")
   const [filters, setFilters] = useState({ type: "All", dateRange: "", status: "All", location: "" })
-  const [sortConfig, setSortConfig] = useState({ key: "submissionDate", direction: "descending" })
+  const [sortConfig, setSortConfig] = useState({ key: "createdAt", direction: "descending" })
 
-  // Memoize quote types for filter dropdown
-  const quoteTypes = useMemo(() => ["All", ...new Set(MOCK_QUOTES.map((q) => q.type))], [])
-  const quoteStatuses = useMemo(() => ["All", ...new Set(MOCK_QUOTES.map((q) => q.status))], [])
+  // Memoize quote types for filter dropdown - use actual quotes data instead of MOCK_QUOTES
+  const quoteTypes = useMemo(() => ["All", ...new Set(quotes.map((q) => q.type || q.jewellrytype).filter(Boolean))], [quotes])
+  const quoteStatuses = useMemo(() => ["All", ...new Set(quotes.map((q) => q.status || (q.submittedforquote ? "New" : "Unknown")).filter(Boolean))], [quotes])
 
   // Filtering Logic
   useEffect(() => {
@@ -284,21 +280,23 @@ const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
     if (searchTerm) {
       result = result.filter(
         (quote) =>
-          quote.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          quote.requirements.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          quote.clientLocation.toLowerCase().includes(searchTerm.toLowerCase()),
+          (quote.clientName && quote.clientName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (quote.clientID && quote.clientID.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (quote.prompt && quote.prompt.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (quote.jewellrytype && quote.jewellrytype.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (quote.clientLocation && quote.clientLocation.toLowerCase().includes(searchTerm.toLowerCase())),
       )
     }
 
     // Filters
     if (filters.type !== "All") {
-      result = result.filter((quote) => quote.type === filters.type)
+      result = result.filter((quote) => (quote.type || quote.jewellrytype) === filters.type)
     }
     if (filters.status !== "All") {
-      result = result.filter((quote) => quote.status === filters.status)
+      result = result.filter((quote) => (quote.status || (quote.submittedforquote ? "New" : "Unknown")) === filters.status)
     }
     if (filters.location) {
-      result = result.filter((quote) => quote.clientLocation.toLowerCase().includes(filters.location.toLowerCase()))
+      result = result.filter((quote) => quote.clientLocation && quote.clientLocation.toLowerCase().includes(filters.location.toLowerCase()))
     }
     // Add date range filter logic here if needed
 
@@ -313,10 +311,10 @@ const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
         let aValue = a[sortConfig.key]
         let bValue = b[sortConfig.key]
 
-        // Handle date sorting
-        if (sortConfig.key === "submissionDate") {
-          aValue = new Date(aValue)
-          bValue = new Date(bValue)
+        // Handle date sorting - use createdAt as primary date field
+        if (sortConfig.key === "createdAt" || sortConfig.key === "updatedAt") {
+          aValue = new Date(getQuoteDate(a))
+          bValue = new Date(getQuoteDate(b))
         }
 
         if (aValue < bValue) {
@@ -347,16 +345,12 @@ const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
   const handleFilterChange = (e) => {
     const { name, value } = e.target
     setFilters((prev) => ({ ...prev, [name]: value }))
-  }  // Action Button Handler
+  }
+
+  // Action Button Handler (Example)
   const handleAction = (action, quoteId) => {
-    if (action === "View Details" || action === "Details") {
-      navigate(`/artisan-quote-details/${quoteId}`);
-    } else if (action === "Respond") {
-      // TODO: Implement respond functionality
-      console.log(`Responding to quote ${quoteId}`);
-    } else {
-      console.log(`${action} action triggered for quote ${quoteId}`);
-    }
+    alert(`${action} action triggered for quote ${quoteId}`)
+    // Add actual logic here (e.g., navigate to detail page, open modal)
   }
 
   if (isLoading) return <div className="loading-state">Loading quotes...</div>
@@ -423,19 +417,19 @@ const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
               </th>
               <th
                 scope="col"
-                onClick={() => requestSort("requirements")}
-                className={`sortable ${getSortDirectionClass("requirements")}`}
-                aria-sort={sortConfig.key === "requirements" ? sortConfig.direction : "none"}
+                onClick={() => requestSort("prompt")}
+                className={`sortable ${getSortDirectionClass("prompt")}`}
+                aria-sort={sortConfig.key === "prompt" ? sortConfig.direction : "none"}
               >
                 Requirements <span className="sort-indicator" aria-hidden="true"></span>
               </th>
               <th
                 scope="col"
-                onClick={() => requestSort("submissionDate")}
-                className={`sortable ${getSortDirectionClass("submissionDate")}`}
-                aria-sort={sortConfig.key === "submissionDate" ? sortConfig.direction : "none"}
+                onClick={() => requestSort("createdAt")}
+                className={`sortable ${getSortDirectionClass("createdAt")}`}
+                aria-sort={sortConfig.key === "createdAt" ? sortConfig.direction : "none"}
               >
-                Submitted <span className="sort-indicator" aria-hidden="true"></span>
+                Created Date <span className="sort-indicator" aria-hidden="true"></span>
               </th>
               <th
                 scope="col"
@@ -453,23 +447,23 @@ const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
               sortedQuotes.map((quote) => (
                 <tr key={quote.id}>
                   <td data-label="Client Details">
-                    {quote.clientName} ({quote.clientLocation})
+                    {quote.clientName || quote.clientID} ({quote.clientLocation || "Location not specified"})
                   </td>
-                  <td data-label="Requirements">{quote.requirements}</td>
-                  <td data-label="Submitted">{formatDate(quote.submissionDate)}</td>
+                  <td data-label="Requirements">{quote.prompt || quote.jewellrytype || "Not specified"}</td>
+                  <td data-label="Created Date">{formatDate(quote.createdAt)}</td>
                   <td data-label="Status">
-                    <span className={`status-badge status-${quote.status.toLowerCase()}`}>{quote.status}</span>
+                    <span className={`status-badge status-${(quote.status || (quote.submittedforquote ? "new" : "unknown")).toLowerCase()}`}>
+                      {quote.status || (quote.submittedforquote ? "New" : "Unknown")}
+                    </span>
                   </td>
-                  <td data-label="Actions">                    <div className="action-buttons-group">
-                      {quote.status === "New" && (
+                  <td data-label="Actions">
+                    <div className="action-buttons-group">
+                      {(!quote.status || quote.status === "New" || quote.submittedforquote) && (
                         <button onClick={() => handleAction("Respond", quote.id)} className="action-button respond">
                           Respond
                         </button>
                       )}
-                      <button 
-                        onClick={() => handleAction("Details", quote.id)} 
-                        className="action-button view"
-                      >
+                      <button onClick={() => handleAction("View Details", quote.id)} className="action-button view">
                         Details
                       </button>
                       {/* Add other relevant actions based on status */}
@@ -489,27 +483,239 @@ const QuoteList = ({ quotes, sectionTitle, isLoading, error }) => {
   )
 }
 
-// Placeholder Settings Component
-const ProfileSettings = ({ userAttributes }) => {
+// Enhanced Quote Requests List Component specifically for new quote requests
+const EnhancedQuoteRequestsList = ({ quotes, isLoading, error }) => {
+  const [filteredQuotes, setFilteredQuotes] = useState(quotes)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filters, setFilters] = useState({ type: "All", material: "All", location: "" })
+  const [sortConfig, setSortConfig] = useState({ key: "createdAt", direction: "descending" })
+
+  // Filter to only show submitted quotes (submittedforquote: true)
+  const submittedQuotes = useMemo(() => {
+    return quotes.filter(quote => quote.submittedforquote === true)
+  }, [quotes])
+
+  // Memoize filter options based on submitted quotes
+  const quoteTypes = useMemo(() => {
+    const types = submittedQuotes.map(q => q.jewellrytype || q.type).filter(Boolean)
+    return ["All", ...new Set(types)]
+  }, [submittedQuotes])
+
+  const materials = useMemo(() => {
+    const mats = submittedQuotes.map(q => q.material).filter(Boolean)
+    return ["All", ...new Set(mats)]
+  }, [submittedQuotes])
+
+  // Filtering Logic
+  useEffect(() => {
+    let result = submittedQuotes
+
+    // Search
+    if (searchTerm) {
+      result = result.filter(
+        (quote) =>
+          (quote.clientName && quote.clientName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (quote.clientID && quote.clientID.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (quote.prompt && quote.prompt.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (quote.jewellrytype && quote.jewellrytype.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (quote.material && quote.material.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (quote.clientLocation && quote.clientLocation.toLowerCase().includes(searchTerm.toLowerCase())),
+      )
+    }
+
+    // Filters
+    if (filters.type !== "All") {
+      result = result.filter((quote) => (quote.jewellrytype || quote.type) === filters.type)
+    }
+    if (filters.material !== "All") {
+      result = result.filter((quote) => quote.material === filters.material)
+    }
+    if (filters.location) {
+      result = result.filter((quote) => quote.clientLocation && quote.clientLocation.toLowerCase().includes(filters.location.toLowerCase()))
+    }
+
+    setFilteredQuotes(result)
+  }, [submittedQuotes, searchTerm, filters])
+
+  // Sorting Logic
+  const sortedQuotes = useMemo(() => {
+    const sortableItems = [...filteredQuotes]
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        let aValue = a[sortConfig.key]
+        let bValue = b[sortConfig.key]
+
+        // Handle date sorting
+        if (sortConfig.key === "createdAt") {
+          aValue = new Date(a.createdAt)
+          bValue = new Date(b.createdAt)
+        }
+
+        if (aValue < bValue) {
+          return sortConfig.direction === "ascending" ? -1 : 1
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === "ascending" ? 1 : -1
+        }
+        return 0
+      })
+    }
+    return sortableItems
+  }, [filteredQuotes, sortConfig])
+
+  const requestSort = (key) => {
+    let direction = "ascending"
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending"
+    }
+    setSortConfig({ key, direction })
+  }
+
+  const getSortDirectionClass = (key) => {
+    if (sortConfig.key !== key) return ""
+    return sortConfig.direction === "ascending" ? "sort-asc" : "sort-desc"
+  }
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target
+    setFilters((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleViewDetails = (quoteId) => {
+    alert(`Viewing details for quote ${quoteId}`)
+    // Implement navigation to detailed view
+  }
+
+  if (isLoading) return <div className="loading-state">Loading quote requests...</div>
+  if (error) return <div className="error-state">Error loading quotes: {error.message || "Please try again."}</div>
+
   return (
-    <div className="profile-settings">
-      <h2>Profile Settings</h2>
-      <p>Manage your profile information here.</p>
-      <div className="profile-info">
-        <p>
-          <strong>Name:</strong> {userAttributes?.given_name} {userAttributes?.family_name}
-        </p>
-        <p>
-          <strong>Email:</strong> {userAttributes?.email}
-        </p>
-        {/* Add more fields and edit functionality as needed */}
+    <div className="quote-requests-section">
+      <h2>Quote Requests ({submittedQuotes.length} total)</h2>
+
+      {/* Search and Filters */}
+      <div className="filters-container">
+        <input
+          type="search"
+          placeholder="Search by type, material, stone, or style..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          aria-label="Search quote requests"
+          className="search-input"
+        />
+        <div className="filter-controls">
+          <select name="type" value={filters.type} onChange={handleFilterChange} aria-label="Filter by jewelry type">
+            {quoteTypes.map((type) => (
+              <option key={type} value={type}>
+                {type === "All" ? "All Types" : type}
+              </option>
+            ))}
+          </select>
+          <select name="material" value={filters.material} onChange={handleFilterChange} aria-label="Filter by material">
+            {materials.map((material) => (
+              <option key={material} value={material}>
+                {material === "All" ? "All Materials" : material}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            name="location"
+            placeholder="Filter by Location"
+            value={filters.location}
+            onChange={handleFilterChange}
+            aria-label="Filter by client location"
+          />
+        </div>
       </div>
-      <button className="action-button">Edit Profile</button> {/* Placeholder */}
+
+      {/* Quote Requests Table */}
+      <div className="table-responsive">
+        <table className="quotes-table" aria-live="polite">
+          <thead>
+            <tr>
+              <th scope="col">Image</th>
+              <th
+                scope="col"
+                onClick={() => requestSort("jewellrytype")}
+                className={`sortable ${getSortDirectionClass("jewellrytype")}`}
+                aria-sort={sortConfig.key === "jewellrytype" ? sortConfig.direction : "none"}
+              >
+                Type <span className="sort-indicator" aria-hidden="true"></span>
+              </th>
+              <th
+                scope="col"
+                onClick={() => requestSort("createdAt")}
+                className={`sortable ${getSortDirectionClass("createdAt")}`}
+                aria-sort={sortConfig.key === "createdAt" ? sortConfig.direction : "none"}
+              >
+                Created Date <span className="sort-indicator" aria-hidden="true"></span>
+              </th>
+              <th
+                scope="col"
+                onClick={() => requestSort("material")}
+                className={`sortable ${getSortDirectionClass("material")}`}
+                aria-sort={sortConfig.key === "material" ? sortConfig.direction : "none"}
+              >
+                Material <span className="sort-indicator" aria-hidden="true"></span>
+              </th>
+              <th scope="col">Details</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedQuotes.length > 0 ? (
+              sortedQuotes.map((quote) => (
+                <tr key={quote.id}>
+                  <td data-label="Image">
+                    {quote.imageUrl ? (
+                      <img 
+                        src={quote.imageUrl} 
+                        alt={`${quote.jewellrytype || 'Jewelry'} design`}
+                        className="quote-image-thumbnail"
+                        style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+                      />
+                    ) : (
+                      <div className="no-image-placeholder" style={{ width: '50px', height: '50px', backgroundColor: '#f0f0f0', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>
+                        No Image
+                      </div>
+                    )}
+                  </td>
+                  <td data-label="Type">{quote.jewellrytype || quote.type || "Not specified"}</td>
+                  <td data-label="Created Date">{formatDate(quote.createdAt)}</td>
+                  <td data-label="Material">{quote.material || "Not specified"}</td>
+                  <td data-label="Details">
+                    <div className="quote-details">
+                      {quote.stone && <div><strong>Stone:</strong> {quote.stone}</div>}
+                      {quote.style && <div><strong>Style:</strong> {quote.style}</div>}
+                      {quote.prompt && <div><strong>Description:</strong> {quote.prompt.substring(0, 50)}...</div>}
+                    </div>
+                  </td>
+                  <td data-label="Actions">
+                    <button 
+                      onClick={() => handleViewDetails(quote.id)} 
+                      className="action-button view"
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6">No quote requests found matching your criteria.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
 
+
 // --- Main Artisan Console Component ---
+//
 // This component serves as the main console for artisans.
 // It displays quotes, subscription options, and navigation links for managing artisan-related tasks.
 const ArtisanConsole = ({ signOut }) => {
@@ -519,24 +725,69 @@ const ArtisanConsole = ({ signOut }) => {
   const [activeSection, setActiveSection] = useState("overview") // Default section
   const [theme, setTheme] = useState("light") // 'light' or 'dark'
 
-  // Mock data fetching state for quotes
+  // GraphQL data fetching state for quotes
   const [quotesLoading, setQuotesLoading] = useState(false)
   const [quotesError, setQuotesError] = useState(null)
   const [allQuotes, setAllQuotes] = useState([]) // Holds all quotes fetched
 
-  const { authStatus } = useAuthenticator((context) => [context.authStatus])
+  const { authStatus, user } = useAuthenticator((context) => [context.authStatus, context.user])
+
+  // Fetch quotes from GraphQL
+  const fetchQuotes = useCallback(async () => {
+    if (!user) {
+      console.error('No user is authenticated')
+      return
+    }
+
+    setQuotesLoading(true)
+    setQuotesError(null)
+
+    try {
+      const response = await client.graphql({
+        query: listCreations,
+        variables: { 
+          filter: { 
+            submittedforquote: { eq: true }
+          } 
+        }
+      })
+
+      console.log('GraphQL Response:', response) // Debug log
+
+      if (response.data && response.data.listCreations && response.data.listCreations.items) {
+        console.log('Fetched quotes:', response.data.listCreations.items) // Debug log
+        setAllQuotes(response.data.listCreations.items)
+      } else {
+        console.error('Unexpected response format:', JSON.stringify(response, null, 2))
+        setAllQuotes([])
+      }
+    } catch (err) {
+      console.error('Error fetching quotes:', err)
+      setQuotesError(err)
+      setAllQuotes([])
+    } finally {
+      setQuotesLoading(false)
+    }
+  }, [user])
 
   // Fetch User Attributes
   useEffect(() => {
     const getUserAttributes = async () => {
       setArtisanLoading(true)
       setError(null)
+      console.log("Fetching user attributes...", userAttributes)
+      if (!authStatus || authStatus !== "authenticated") {
+        console.warn("User is not authenticated, skipping user attributes fetch")
+        setArtisanLoading(false)
+        return
+      }
+
       try {
         // TODO: Replace with real user attributes fetching
         setUserAttributes({
           given_name: "Artisan",
           family_name: "User",
-          email: "artisan@example.com",
+          email: user?.signInDetails?.loginId || "artisan@example.com",
         })
       } catch (err) {
         console.error("Error fetching user attributes:", err)
@@ -546,45 +797,14 @@ const ArtisanConsole = ({ signOut }) => {
       }
     }
     getUserAttributes()
-  }, [authStatus])
+  }, [authStatus, user])
 
-  // Mock Fetch Quotes Data
+  // Fetch quotes when component mounts or user changes
   useEffect(() => {
-    setQuotesLoading(true)
-    setQuotesError(null)
-
-    // TODO: Replace with real API call to fetch quotes
-    try {
-      // Demo data structure matches your real data
-      setAllQuotes([
-        {
-          id: "q1",
-          clientName: "Alice Smith",
-          clientLocation: "London, UK",
-          requirements: "Custom gold ring with diamond",
-          submissionDate: "2024-04-28",
-          status: "New",
-          type: "Ring",
-          estimatedValue: 1500,
-        },
-        {
-          id: "q2",
-          clientName: "Bob Johnson",
-          clientLocation: "New York, USA",
-          requirements: "Silver necklace repair",
-          submissionDate: "2024-04-27",
-          status: "Completed",
-          type: "Repair",
-          estimatedValue: 500,
-          finalPrice: 450,
-        },
-      ])
-      setQuotesLoading(false)
-    } catch (err) {
-      setQuotesError(err)
-      setQuotesLoading(false)
+    if (user) {
+      fetchQuotes()
     }
-  }, []) // Fetch once on component mount
+  }, [user, fetchQuotes])
 
   // Filter quotes based on active section
   const quotesForSection = useMemo(() => {
@@ -595,6 +815,8 @@ const ArtisanConsole = ({ signOut }) => {
         return allQuotes.filter((q) => q.status === "Accepted")
       case "rejected":
         return allQuotes.filter((q) => q.status === "Rejected")
+      case "quote-requests":
+        return allQuotes.filter((q) => q.submittedforquote === true)
       default:
         return allQuotes // For overview or other sections
     }
@@ -628,6 +850,7 @@ const ArtisanConsole = ({ signOut }) => {
 
   // Determine artisan name for sidebar
   const artisanName = userAttributes.given_name || userAttributes.email || "Artisan"
+
   return (
     <div className={`artisan-dashboard-container ${theme}-theme`}>
       <Sidebar
@@ -638,40 +861,46 @@ const ArtisanConsole = ({ signOut }) => {
       />
       <div className="main-content-area">
         <Header theme={theme} toggleTheme={toggleTheme} onSignOut={signOut} />
-        <main className="dashboard-content">          <Routes>
-            <Route path="/" element={
-              <>
-                {activeSection === "overview" && (
-                  <DashboardContent
-                    artisanData={{
-                      recentQuotes: allQuotes,
-                      pendingQuotes: allQuotes.filter((q) => q.status === "New").length,
-                      completedQuotes: allQuotes.filter((q) => q.status === "Completed").length,
-                      monthlyRevenue: allQuotes
-                        .filter(
-                          (q) =>
-                            q.status === "Completed" &&
-                            new Date(q.completionDate).getMonth() === new Date().getMonth(),
-                        )
-                        .reduce((sum, q) => sum + (q.finalPrice || 0), 0),
-                      growthRate: calculateGrowthRate(allQuotes),
-                    }}
-                    setActiveSection={setActiveSection}
-                  />
-                )}
-                {activeSection === "quote-requests" && (
-                  <QuoteList
-                    quotes={quotesForSection}
-                    sectionTitle="Quote Requests"
-                    isLoading={quotesLoading}
-                    error={quotesError}
-                  />
-                )}
-                {/* Add other section components here */}
-              </>
-            } />
-            <Route path="quote-details/:id" element={<ArtisanQuoteDetailsPage />} />
-          </Routes>
+        <main className="dashboard-content">
+          {activeSection === "overview" && (
+            <DashboardOverview
+              quotes={allQuotes}
+              setActiveSection={setActiveSection}
+            />
+          )}
+          {activeSection === "quote-requests" && (
+            <EnhancedQuoteRequestsList
+              quotes={quotesForSection}
+              isLoading={quotesLoading}
+              error={quotesError}
+            />
+          )}
+          {activeSection === "responded" && (
+            <QuoteList
+              quotes={quotesForSection}
+              sectionTitle="Responded Quotes"
+              isLoading={quotesLoading}
+              error={quotesError}
+            />
+          )}
+          {activeSection === "accepted" && (
+            <QuoteList
+              quotes={quotesForSection}
+              sectionTitle="Accepted/Won Quotes"
+              isLoading={quotesLoading}
+              error={quotesError}
+            />
+          )}
+          {activeSection === "rejected" && (
+            <QuoteList
+              quotes={quotesForSection}
+              sectionTitle="Rejected/Lost Quotes"
+              isLoading={quotesLoading}
+              error={quotesError}
+            />
+          )}
+          {activeSection === "subscription" && <SubscriptionContent />}
+          {activeSection === "settings" && <ProfileSettings userAttributes={userAttributes} />}
         </main>
       </div>
     </div>

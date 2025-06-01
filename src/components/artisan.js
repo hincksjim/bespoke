@@ -150,6 +150,15 @@ const Artisan = () => {
     }
   };
 
+  const handleArtisanLogin = () => {
+    navigate('/artisan-login', {
+      state: {
+        userPool: 'secondary',
+        returnTo: '/artisan-dashboard'
+      }
+    });
+  };
+
   return (
     <div>
       <main>
@@ -167,25 +176,55 @@ const Artisan = () => {
             </p>
           </div>
 
-          <div className="artisan-benefits">
-            <h3>Why Join Elegance Jewellery?</h3>
-            <ul>
-              <li>Connect with high-value clients seeking bespoke jewelry pieces</li>
-              <li>Showcase your craftsmanship to a global audience</li>
-              <li>Set your own pricing and availability</li>
-              <li>Receive secure payments through our trusted platform</li>
-              <li>Gain exposure through our marketing channels</li>
-            </ul>
+          <div className="benefits-grid">
+            <div className="benefit-item">
+              <h3>Global Client Base</h3>
+              <p>Connect with high-value clients seeking bespoke jewelry pieces from around the world.</p>
+            </div>
+            <div className="benefit-item">
+              <h3>Showcase Your Work</h3>
+              <p>Display your craftsmanship to a global audience through our premium platform.</p>
+            </div>
+            <div className="benefit-item">
+              <h3>Flexible Pricing</h3>
+              <p>Set your own pricing and availability to match your business needs.</p>
+            </div>
+            <div className="benefit-item">
+              <h3>Secure Payments</h3>
+              <p>Receive secure payments through our trusted and reliable payment platform.</p>
+            </div>
+            <div className="benefit-item">
+              <h3>Marketing Support</h3>
+              <p>Gain exposure through our marketing channels and promotional activities.</p>
+            </div>
+            <div className="benefit-item">
+              <h3>Professional Network</h3>
+              <p>Join a community of skilled artisans and share knowledge and experiences.</p>
+            </div>
           </div>
 
-          <div className="cta-container">
-            <button
-              className="register-button"
-              onClick={handleArtisanSignUp}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Processing...' : 'Register as an Artisan'}
-            </button>
+          <div className="registration-footer">
+            <div className="join-cta">
+              <h3>Ready to Start Your Journey?</h3>
+              <p>Join hundreds of artisans who have already transformed their craft into a thriving business.</p>
+            </div>
+
+            <div className="form-actions">
+              <button
+                className="register-button"
+                onClick={handleArtisanSignUp}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Processing...' : 'Register as an Artisan'}
+              </button>
+
+              <button
+                className="login-button"
+                onClick={handleArtisanLogin}
+              >
+                Artisan Login
+              </button>
+            </div>
 
             <p className="terms-note">
               By registering, you agree to our <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Policy</a>
