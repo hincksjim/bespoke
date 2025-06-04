@@ -930,4 +930,110 @@
   .dark-theme .chart-placeholder pre {
     background-color: rgba(255, 255, 255, 0.05);
   }
+  /* Add this CSS to your artisan-console.css or relevant stylesheet */
+
+/* Quote Requests Filters Container */
+.quote-filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* Individual filter groups */
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 150px;
+}
+
+.filter-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-group select {
+  padding: 8px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Search input styling */
+.search-input-container {
+  flex: 1;
+  min-width: 250px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Sort dropdown */
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .quote-filters-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
   
+  .filter-group,
+  .search-input-container {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .sort-container {
+    justify-content: space-between;
+  }
+}
+
+/* Dark theme support */
+.dark-theme .quote-filters-container {
+  background-color: #2d3748;
+}
+
+.dark-theme .filter-group select,
+.dark-theme .search-input {
+  background-color: #4a5568;
+  border-color: #4a5568;
+  color: white;
+}
+
+.dark-theme .filter-group label {
+  color: #a0aec0;
+}

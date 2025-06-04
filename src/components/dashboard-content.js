@@ -1,12 +1,9 @@
-// This component displays the dashboard content, including statistics and analytics for artisans.
-// It shows key metrics like pending quotes, completed quotes, revenue, and growth rate.
+// dashboard-content.js
 
-// Import necessary icons and styles
 import { Clock, CheckCircle, DollarSign, TrendingUp } from "lucide-react"
 import "./dashboard-content.css"
 
 export default function DashboardContent({ artisanData }) {
-  // In a real app, you would fetch this data from your backend
   const stats = [
     {
       id: "pending",
@@ -38,7 +35,6 @@ export default function DashboardContent({ artisanData }) {
     },
   ]
 
-  // Recent quotes would come from your backend
   const recentQuotes = artisanData?.recentQuotes || []
 
   return (
@@ -75,11 +71,13 @@ export default function DashboardContent({ artisanData }) {
               <div key={quote.id} className="recent-quote-item">
                 <div className="recent-quote-details">
                   <p className="recent-quote-client">{quote.clientName}</p>
-                  <p className="recent-quote-description">{quote.description}</p>
+                  <p className="recent-quote-description">{quote.requirements}</p>
                 </div>
                 <div className="recent-quote-meta">
                   <p className="recent-quote-value">${quote.estimatedValue}</p>
-                  <p className="recent-quote-date">{new Date(quote.requestDate).toLocaleDateString()}</p>
+                  <p className="recent-quote-date">
+                    {new Date(quote.submissionDate).toLocaleDateString()}
+                  </p>
                 </div>
               </div>
             ))
@@ -95,3 +93,4 @@ export default function DashboardContent({ artisanData }) {
     </div>
   )
 }
+

@@ -5,15 +5,11 @@ import { loadStripe } from '@stripe/stripe-js';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import './payment.css';
 
-// This file defines the ArtisanPaymentPage component, which handles the payment process for artisans subscribing to a monthly plan.
-// It integrates with Stripe for secure payment processing and fetches the client secret from the backend to initialize the payment flow.
-
-// This component handles the payment process for artisans subscribing to a monthly plan.
-// It integrates with Stripe to securely process payments and fetches the client secret from the backend.
-
+// Initialize Stripe with your publishable key
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-const ArtisanPaymentPage = () => {
+// Separate the payment form component that uses Stripe hooks
+const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
@@ -22,6 +18,7 @@ const ArtisanPaymentPage = () => {
   const [clientSecret, setClientSecret] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [paymentStatus, setPaymentStatus] = useState('initial');
+  const [isLoading, setIsLoading] = useState(true);
   const [subscriptionPlan] = useState({
     name: 'Artisan Monthly',
     price: 2999, // £29.99
@@ -29,13 +26,15 @@ const ArtisanPaymentPage = () => {
     interval: 'month'
   });
 
-  // stripePromise
-  // This initializes the Stripe object using the publishable key from the environment variables.
-
   useEffect(() => {
     // Fetch the clientSecret from the backend
     const fetchClientSecret = async () => {
       try {
+        setIsLoading(true);
+        setErrorMessage('');
+        
+        console.log('Fetching client secret for user:', user?.attributes?.email);
+        
         const response = await fetch('/api/create-subscription', {
           method: 'POST',
           headers: {
@@ -44,32 +43,75 @@ const ArtisanPaymentPage = () => {
           body: JSON.stringify({
             email: user?.attributes?.email,
             plan: subscriptionPlan.name,
+            priceId: 'price_YOUR_STRIPE_PRICE_ID', // Replace with your actual Stripe price ID
           }),
         });
 
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+
+        // Check if the response is OK
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('HTTP error response:', errorText);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Check content type
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const responseText = await response.text();
+          console.error('Non-JSON response:', responseText);
+          throw new Error('Server returned non-JSON response. API endpoint may not exist.');
+        }
+
         const data = await response.json();
+        console.log('Received data:', data);
+        
         if (data.clientSecret) {
           setClientSecret(data.clientSecret);
+          console.log('Client secret set successfully');
         } else {
-          throw new Error('Failed to fetch client secret');
+          throw new Error('No client secret in response');
         }
       } catch (error) {
         console.error('Error fetching client secret:', error);
-        setErrorMessage('Failed to initialize payment. Please try again later.');
+        
+        // More specific error messages based on error type
+        if (error.message.includes('Failed to fetch')) {
+          setErrorMessage('Cannot connect to payment server. Please check if your backend is running.');
+        } else if (error.message.includes('non-JSON response') || error.message.includes('Unexpected token')) {
+          setErrorMessage('Payment API not configured. The /api/create-subscription endpoint may not exist.');
+        } else if (error.message.includes('HTTP error! status: 404')) {
+          setErrorMessage('Payment endpoint not found. Please ensure /api/create-subscription is implemented.');
+        } else if (error.message.includes('HTTP error! status: 500')) {
+          setErrorMessage('Payment server error. Please check your backend logs.');
+        } else {
+          setErrorMessage(`Failed to initialize payment: ${error.message}`);
+        }
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchClientSecret();
+    if (user?.attributes?.email) {
+      fetchClientSecret();
+    } else {
+      setErrorMessage('User email not available. Please ensure you are logged in.');
+      setIsLoading(false);
+    }
   }, [user, subscriptionPlan.name]);
-
-  // useEffect Hook
-  // This hook fetches the client secret from the backend when the component mounts.
-  // The client secret is required to initialize the Stripe PaymentElement for processing payments.
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!stripe || !elements) {
+      setErrorMessage('Stripe is not loaded. Please refresh the page.');
+      return;
+    }
+
+    if (!clientSecret) {
+      setErrorMessage('Payment not initialized. Please refresh the page.');
       return;
     }
 
@@ -91,6 +133,7 @@ const ArtisanPaymentPage = () => {
       });
 
       if (submitError) {
+        console.error('Payment confirmation error:', submitError);
         setErrorMessage(submitError.message);
         setPaymentStatus('failed');
         return;
@@ -98,54 +141,70 @@ const ArtisanPaymentPage = () => {
 
       // Handle successful payment
       if (paymentIntent && paymentIntent.status === 'succeeded') {
+        console.log('Payment succeeded:', paymentIntent);
+        
         try {
-          // Here you would update the artisan's subscription status in your backend
-          
-          navigate('/artisan-payment-success', {
-            state: {
-              paymentData: {
-                orderId: paymentIntent.id,
-                amount: subscriptionPlan.price / 100,
-                product: `${subscriptionPlan.name} Subscription`,
-                email: user?.attributes?.email,
-                date: new Date().toISOString(),
-                paymentMethod: {
-                  brand: 'card',
-                  last4: '****'
-                },
-                subscriptionType: 'monthly'
-              }
+          // Optional: Update subscription status in your backend
+          await fetch('/api/update-subscription-status', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
             },
-            replace: true
+            body: JSON.stringify({
+              email: user?.attributes?.email,
+              paymentIntentId: paymentIntent.id,
+              subscriptionId: paymentIntent.subscription,
+            }),
           });
-        } catch (error) {
-          console.error('Error updating subscription:', error);
-          setErrorMessage('Payment succeeded but failed to update subscription. Please contact support.');
-          setPaymentStatus('failed');
+        } catch (updateError) {
+          console.warn('Failed to update subscription status:', updateError);
+          // Don't block the success flow for this
         }
+
+        // Navigate to success page
+        navigate('/artisan-payment-success', {
+          state: {
+            paymentData: {
+              orderId: paymentIntent.id,
+              amount: subscriptionPlan.price / 100,
+              product: `${subscriptionPlan.name} Subscription`,
+              email: user?.attributes?.email,
+              date: new Date().toISOString(),
+              paymentMethod: {
+                brand: 'card',
+                last4: '****'
+              },
+              subscriptionType: 'monthly'
+            }
+          },
+          replace: true
+        });
       }
     } catch (error) {
       console.error('Payment error:', error);
-      setErrorMessage(error.message || 'An error occurred during payment');
+      setErrorMessage(error.message || 'An unexpected error occurred during payment');
       setPaymentStatus('failed');
     }
   };
 
-  // handleSubmit Function
-  // This function handles the form submission for the payment process.
-  // It uses the Stripe API to confirm the payment and navigates to the success page upon successful payment.
-  // In case of errors, it updates the error message and payment status accordingly.
-
-  if (!clientSecret) {
-    return <div>Loading payment details...</div>;
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="design-tool payment-page">
+        <div className="payment-container">
+          <h1>Artisan Subscription</h1>
+          <div className="loading-message">
+            <p>Loading payment details...</p>
+            <p>Initializing secure payment form...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  // Rendered Output
-  // The component renders the subscription plan details, a Stripe PaymentElement for entering payment information, and a submit button.
-  // It also displays error messages if the payment process encounters any issues.
-
-  return (
-    <Elements stripe={stripePromise} options={{ clientSecret }}>
+  // Error state - show error but still show plan details
+  if (errorMessage && !clientSecret) {
+    return (
       <div className="design-tool payment-page">
         <div className="payment-container">
           <h1>Artisan Subscription</h1>
@@ -160,24 +219,63 @@ const ArtisanPaymentPage = () => {
             </ul>
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <PaymentElement />
-            <button
-              type="submit"
-              disabled={!stripe || paymentStatus === 'processing'}
-              className="payment-button"
+          <div className="error-message">
+            <h3>Payment Setup Required</h3>
+            <p>{errorMessage}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="retry-button"
             >
-              {paymentStatus === 'processing' ? 'Processing...' : 'Subscribe Now'}
+              Retry
             </button>
-          </form>
-
-          {errorMessage && (
-            <div className="error-message">
-              {errorMessage}
-            </div>
-          )}
+          </div>
         </div>
       </div>
+    );
+  }
+
+  // Success state - show payment form
+  return (
+    <div className="design-tool payment-page">
+      <div className="payment-container">
+        <h1>Artisan Subscription</h1>
+        <div className="plan-details">
+          <h2>{subscriptionPlan.name}</h2>
+          <p className="price">£{(subscriptionPlan.price / 100).toFixed(2)} / month</p>
+          <ul className="features">
+            <li>Full access to artisan console</li>
+            <li>Unlimited quote responses</li>
+            <li>Priority support</li>
+            <li>Analytics and reporting</li>
+          </ul>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <PaymentElement />
+          <button
+            type="submit"
+            disabled={!stripe || paymentStatus === 'processing'}
+            className="payment-button"
+          >
+            {paymentStatus === 'processing' ? 'Processing...' : 'Subscribe Now'}
+          </button>
+        </form>
+
+        {errorMessage && (
+          <div className="error-message">
+            {errorMessage}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Main component that wraps the payment form with Elements provider
+const ArtisanPaymentPage = () => {
+  return (
+    <Elements stripe={stripePromise}>
+      <PaymentForm />
     </Elements>
   );
 };
